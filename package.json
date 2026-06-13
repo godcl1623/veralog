@@ -10,6 +10,10 @@
     "build:api": "turbo build --filter @veralog/api",
     "start:api": "turbo start --filter @veralog/api",
     "lint:api": "turbo lint --filter @veralog/api",
+    "dev:web": "turbo dev --filter @veralog/web",
+    "build:web": "turbo build --filter @veralog/web",
+    "start:web": "turbo start --filter @veralog/web",
+    "lint:web": "turbo lint --filter @veralog/web",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky"
   },
@@ -32,6 +36,7 @@
     "lint-staged": "^17.0.7",
     "prettier": "^3.8.4",
     "turbo": "^2.9.18",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.61.0"
   },
   "lint-staged": {
