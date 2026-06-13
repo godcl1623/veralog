@@ -2,20 +2,22 @@
   "name": "veralog",
   "description": "An app for managing project worklogs.",
   "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "start": "turbo start",
+    "lint": "turbo lint",
+    "dev:api": "turbo dev --filter @veralog/api",
+    "build:api": "turbo build --filter @veralog/api",
+    "start:api": "turbo start --filter @veralog/api",
+    "lint:api": "turbo lint --filter @veralog/api",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.6.0",
-      "onFail": "download"
-    }
-  },
   "type": "module",
+  "packageManager": "pnpm@11.6.0",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.1",
