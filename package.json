@@ -12,7 +12,6 @@
     "lint:api": "turbo lint --filter @veralog/api",
     "dev:web": "turbo dev --filter @veralog/web",
     "build:web": "turbo build --filter @veralog/web",
-    "start:web": "turbo start --filter @veralog/web",
     "lint:web": "turbo lint --filter @veralog/web",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky"

@@ -3,6 +3,9 @@
   "description": "Project-wide shared types and utilities.",
   "main": "./src/index.ts",
   "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "zod": "^4.4.3"
   }
