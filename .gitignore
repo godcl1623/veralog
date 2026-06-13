@@ -1,0 +1,6 @@
+# IDE settings
+.idea
+
+# Agent settings
+CLAUDE.md
+.claude
