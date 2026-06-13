@@ -8,5 +8,16 @@
     "start": "node dist/index.js"
   },
   "author": "godcl1623",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@hono/node-server": "^2.0.4",
+    "@veralog/shared": "workspace:*",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.12.25",
+    "postgres": "^3.4.9"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "drizzle-kit": "^0.31.10"
+  }
 }
