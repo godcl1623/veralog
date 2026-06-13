@@ -1,6 +1,7 @@
 {
   "name": "veralog",
   "description": "An app for managing project worklogs.",
+  "version": "0.0.0",
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
