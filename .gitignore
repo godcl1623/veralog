@@ -1,6 +1,29 @@
 # IDE settings
 .idea
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # Agent settings
 CLAUDE.md
 .claude
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# etc
+node_modules
+dist
+dist-ssr
+*.local
