@@ -1,4 +1,11 @@
-import { pgTable, timestamp, unique, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgTable,
+  timestamp,
+  unique,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 import { projects } from "./projects";
 
@@ -16,5 +23,6 @@ export const categories = pgTable(
   },
   (table) => [
     unique("categories_project_id_name_unique").on(table.projectId, table.name),
+    index("categories_project_id_idx").on(table.projectId),
   ]
 );

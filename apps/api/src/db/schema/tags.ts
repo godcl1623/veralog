@@ -8,6 +8,6 @@ export const tags = pgTable("tags", {
     .notNull()
     .references(() => users.id),
   name: varchar("name").notNull(),
-  createdAt: timestamp("create_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

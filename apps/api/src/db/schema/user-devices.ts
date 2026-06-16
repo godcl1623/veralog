@@ -10,5 +10,5 @@ export const userDevices = pgTable("user_devices", {
   deviceName: varchar("device_name"),
   refreshToken: varchar("refresh_token"),
   lastAccessedAt: timestamp("last_accessed_at"),
-  createdAt: timestamp("created_at").defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });

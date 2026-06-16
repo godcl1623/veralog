@@ -1,4 +1,4 @@
-import { pgTable, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 
 import { notes } from "./notes";
 import { tags } from "./tags";
@@ -17,5 +17,6 @@ export const noteTags = pgTable(
   },
   (table) => [
     unique("note_tags_id_tag_id_unique").on(table.noteId, table.tagId),
+    index("note_tags_tag_id_idx").on(table.tagId),
   ]
 );

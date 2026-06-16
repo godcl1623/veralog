@@ -10,11 +10,15 @@ import {
 
 import { categories } from "./categories";
 import { projects } from "./projects";
+import { users } from "./users";
 
 export const notes = pgTable(
   "notes",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id),
     projectId: uuid("project_id")
       .notNull()
       .references(() => projects.id),
@@ -30,7 +34,10 @@ export const notes = pgTable(
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
   (table) => [
-    index("notes_project_id_idx").on(table.projectId),
+    index("notes_user_id_idx").on(table.userId),
+    index("notes_project_id_idx")
+      .on(table.projectId)
+      .where(sql`${table.deletedAt} IS NULL`),
     index("notes_category_id_idx").on(table.categoryId),
     index("notes_created_at_idx").on(table.createdAt),
     index("notes_deleted_at_idx")
