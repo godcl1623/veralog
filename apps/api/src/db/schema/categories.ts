@@ -15,7 +15,7 @@ export const categories = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     projectId: uuid("project_id")
       .notNull()
-      .references(() => projects.id),
+      .references(() => projects.id, { onDelete: "cascade" }),
     name: varchar("name").notNull(),
     color: varchar("color"),
     createdAt: timestamp("created_at").notNull().defaultNow(),

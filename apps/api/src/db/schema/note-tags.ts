@@ -9,10 +9,10 @@ export const noteTags = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     noteId: uuid("note_id")
       .notNull()
-      .references(() => notes.id),
+      .references(() => notes.id, { onDelete: "cascade" }),
     tagId: uuid("tag_id")
       .notNull()
-      .references(() => tags.id),
+      .references(() => tags.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [

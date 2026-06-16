@@ -16,7 +16,7 @@ export const projects = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     userId: uuid("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     name: varchar("name").notNull(),
     description: text("description"),
     isSystem: boolean("is_system").notNull(),

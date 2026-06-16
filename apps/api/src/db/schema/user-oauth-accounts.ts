@@ -6,7 +6,7 @@ export const userOauthAccounts = pgTable("user_oauth_accounts", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: "cascade" }),
   provider: varchar("provider").notNull(),
   providerAccountId: varchar("provider_account_id"),
   createdAt: timestamp("created_at").notNull().defaultNow(),

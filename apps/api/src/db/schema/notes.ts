@@ -18,14 +18,17 @@ export const notes = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     userId: uuid("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     projectId: uuid("project_id")
       .notNull()
-      .references(() => projects.id),
-    originalProjectId: uuid("original_project_id")
-      .notNull()
-      .references(() => projects.id),
-    categoryId: uuid("category_id").references(() => categories.id),
+      .references(() => projects.id, { onDelete: "cascade" }),
+    originalProjectId: uuid("original_project_id").references(
+      () => projects.id,
+      { onDelete: "set null" }
+    ),
+    categoryId: uuid("category_id").references(() => categories.id, {
+      onDelete: "set null",
+    }),
     title: varchar("title").notNull(),
     content: text("content"),
     deletedAt: timestamp("deleted_at"),
