@@ -45,6 +45,6 @@ export const notes = pgTable(
     index("notes_created_at_idx").on(table.createdAt),
     index("notes_deleted_at_idx")
       .on(table.deletedAt)
-      .where(sql`${table.deletedAt} IS NULL`),
+      .where(sql`${table.deletedAt} IS NOT NULL`),
   ]
 );

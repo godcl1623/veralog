@@ -4,6 +4,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -20,5 +21,8 @@ export const terms = pgTable(
     effectiveAt: timestamp("effective_at").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
-  (table) => [index("terms_effective_at_idx").on(table.effectiveAt)]
+  (table) => [
+    index("terms_effective_at_idx").on(table.effectiveAt),
+    unique("terms_category_version_unique").on(table.category, table.version),
+  ]
 );
