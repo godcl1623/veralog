@@ -12,6 +12,8 @@
 # Agent settings
 CLAUDE.md
 .claude
+AGENTS.md
+.pi
 
 # Logs
 logs
