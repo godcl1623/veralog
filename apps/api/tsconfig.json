@@ -3,10 +3,13 @@
   "compilerOptions": {
     "module": "preserve",
     "moduleResolution": "bundler",
-    "rootDir": "src",
-    "outDir": "dist",
+    "rootDir": "../../",
+    "outDir": "../../dist/apps/api",
     "noEmit": false,
-    "types": ["node", "vitest/globals"]
+    "types": ["node", "vitest/globals"],
+    "paths": {
+      "@veralog/shared": ["../../packages/shared/src/index.ts"]
+    }
   },
   "include": ["./**/*.ts"]
 }
