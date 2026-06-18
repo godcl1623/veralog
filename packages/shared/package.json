@@ -4,7 +4,11 @@
   "main": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "zod": "^4.4.3"
