@@ -21,3 +21,6 @@ export const userOauthAccounts = pgTable(
     ),
   ]
 );
+
+export type NewUserOauthAccount = typeof userOauthAccounts.$inferInsert;
+export type UserOauthAccount = typeof userOauthAccounts.$inferSelect;
