@@ -1,9 +1,5 @@
-import type {
-  NewUser,
-  NewUserDevice,
-  NewUserOauthAccount,
-} from "../src/db/schema";
-import { userDevices, userOauthAccounts, users } from "../src/db/schema";
+import type { NewUser, NewUserDevice, NewUserOauthAccount } from "../db/schema";
+import { userDevices, userOauthAccounts, users } from "../db/schema";
 import { db } from "./db";
 
 /**

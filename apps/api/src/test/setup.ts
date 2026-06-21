@@ -4,7 +4,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { afterAll, beforeEach } from "vitest";
 
-import * as schema from "../src/db/schema";
+import * as schema from "../db/schema";
 
 /**
  * Vitest setupFiles: 각 테스트 파일마다 실행됨.

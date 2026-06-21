@@ -16,7 +16,6 @@
     "**/*.test.ts",
     "**/*.spec.ts",
     "src/test/**",
-    "test/**",
     "vitest.config.ts",
     "vitest.global-setup.ts"
   ]

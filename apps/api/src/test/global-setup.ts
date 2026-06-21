@@ -3,7 +3,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 
-import * as schema from "../src/db/schema";
+import * as schema from "../db/schema";
 
 /**
  * Vitest globalSetup: 테스트 실행 전 1회 실행.

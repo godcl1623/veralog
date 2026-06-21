@@ -2,7 +2,7 @@ import { getRequiredEnv } from "@veralog/shared";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-import * as schema from "../src/db/schema";
+import * as schema from "../db/schema";
 
 /**
  * 테스트 전용 DB 인스턴스.
