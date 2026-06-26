@@ -14,6 +14,9 @@ export default defineConfig({
     environment: "node",
     globals: true,
     include: ["src/**/*.{test,spec}.?(c|m)[jt]s"],
+    // DB 테스트가 같은 DB를 공유하므로 병렬 실행 시 TRUNCATE 경합 발생.
+    // fileParallelism 비활성화로 순차 실행하여 race condition 차단.
+    fileParallelism: false,
     globalSetup: ["./src/test/global-setup.ts"],
     setupFiles: ["./src/test/setup.ts"],
     coverage: {
