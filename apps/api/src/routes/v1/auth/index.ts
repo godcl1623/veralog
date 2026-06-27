@@ -13,19 +13,12 @@ import { getCookie, setCookie } from "hono/cookie";
 
 import { db } from "../../../db/client";
 import { userDevices, userOauthAccounts, users } from "../../../db/schema";
+import { setAuthCookies } from "../../../utils/cookies";
 import { fetchGoogleUserInfo } from "../../../utils/google";
-import {
-  ACCESS_TOKEN_COOKIE_NAME,
-  ACCESS_TOKEN_TTL_SECONDS,
-  REFRESH_TOKEN_COOKIE_NAME,
-  signAccessToken,
-} from "../../../utils/jwt";
+import { signAccessToken } from "../../../utils/jwt";
 import { generateRandomNickname } from "../../../utils/nickname";
-import {
-  generateRefreshToken,
-  hashToken,
-  REFRESH_TOKEN_TTL_SECONDS,
-} from "../../../utils/token";
+import { generateRefreshToken, hashToken } from "../../../utils/token";
+import { refreshRouter } from "./refresh";
 
 export const auth = new Hono();
 
@@ -37,6 +30,8 @@ const google = new Google(
 
 const SCOPES = ["openid", "profile", "email"];
 const OAUTH_COOKIE_MAX_AGE = 600; // 10 minutes
+
+auth.route("/", refreshRouter);
 
 auth.get("/google", async (ctx) => {
   try {
@@ -164,27 +159,6 @@ async function getOrCreateUser(args: {
     });
 
     return { userId, isNewUser, refreshToken };
-  });
-}
-
-function setAuthCookies(
-  ctx: Context,
-  accessToken: string,
-  refreshToken: string
-): void {
-  const baseOpts = {
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-    httpOnly: true,
-    sameSite: "Lax" as const,
-  };
-  setCookie(ctx, ACCESS_TOKEN_COOKIE_NAME, accessToken, {
-    ...baseOpts,
-    maxAge: ACCESS_TOKEN_TTL_SECONDS,
-  });
-  setCookie(ctx, REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
-    ...baseOpts,
-    maxAge: REFRESH_TOKEN_TTL_SECONDS,
   });
 }
 

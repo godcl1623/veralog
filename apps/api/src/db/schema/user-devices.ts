@@ -9,6 +9,7 @@ export const userDevices = pgTable("user_devices", {
     .references(() => users.id, { onDelete: "cascade" }),
   deviceName: varchar("device_name"),
   refreshToken: varchar("refresh_token"),
+  previousRefreshTokenHash: varchar("previous_refresh_token_hash"),
   lastAccessedAt: timestamp("last_accessed_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });

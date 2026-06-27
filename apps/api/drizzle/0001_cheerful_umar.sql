@@ -1,0 +1,1 @@
+ALTER TABLE "user_devices" ADD COLUMN "previous_refresh_token_hash" varchar;
