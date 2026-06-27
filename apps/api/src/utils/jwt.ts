@@ -10,6 +10,9 @@ export const ACCESS_TOKEN_TTL_SECONDS = 60 * 15;
 /** Access Token을 담는 쿠키 이름. */
 export const ACCESS_TOKEN_COOKIE_NAME = "access_token";
 
+/** Refresh Token을 담는 쿠키 이름. */
+export const REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
+
 /** Access Token의 JWT payload. hono/jwt 표준 claim 사용. */
 export type AccessTokenPayload = {
   /** subject — 사용자 ID (users.id) */
