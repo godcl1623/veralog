@@ -18,6 +18,7 @@ import { fetchGoogleUserInfo } from "../../../utils/google";
 import { signAccessToken } from "../../../utils/jwt";
 import { generateRandomNickname } from "../../../utils/nickname";
 import { generateRefreshToken, hashToken } from "../../../utils/token";
+import { logoutRouter } from "./logout";
 import { refreshRouter } from "./refresh";
 
 export const auth = new Hono();
@@ -32,6 +33,7 @@ const SCOPES = ["openid", "profile", "email"];
 const OAUTH_COOKIE_MAX_AGE = 600; // 10 minutes
 
 auth.route("/", refreshRouter);
+auth.route("/", logoutRouter);
 
 auth.get("/google", async (ctx) => {
   try {
