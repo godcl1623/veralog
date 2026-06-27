@@ -11,9 +11,7 @@ import { hashToken } from "../../../utils/token";
 
 export const logoutRouter = new Hono();
 
-logoutRouter.use(authMiddleware);
-
-logoutRouter.delete("/logout", async (ctx) => {
+logoutRouter.delete("/logout", authMiddleware, async (ctx) => {
   const userId = ctx.get("user").id;
   const refreshToken = getCookie(ctx, REFRESH_TOKEN_COOKIE_NAME);
 
