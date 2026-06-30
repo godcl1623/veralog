@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "API server for Veralog",
   "scripts": {
-    "dev": "tsx --env-file=.env watch src/index.ts",
+    "dev": "tsx --env-file=.env --watch src/index.ts",
     "build": "tsc",
     "start:dev": "node --env-file=.env.dev dist/index.js",
     "start:prod": "node --env-file=.env.prod dist/index.js",
