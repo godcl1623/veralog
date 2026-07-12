@@ -1,4 +1,4 @@
 {
   "plugins": ["./node_modules/prettier-plugin-tailwindcss/dist/index.mjs"],
-  "tailwindStylesheet": "./src/index.css"
+  "tailwindStylesheet": "./src/__globals__/styles/index.css"
 }
