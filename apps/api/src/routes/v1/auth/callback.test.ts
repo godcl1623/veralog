@@ -1,10 +1,12 @@
 import { and, eq } from "drizzle-orm";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { userDevices, userOauthAccounts, users } from "../../../db/schema";
 import { db } from "../../../test/db";
 import { createOAuthAccount, createUser } from "../../../test/fixtures";
 import { mockGoogle } from "../../../test/mocks/arctic";
+import { readCsrfToken } from "../../../utils/csrf";
+import { hashToken, REFRESH_TOKEN_TTL_SECONDS } from "../../../utils/token";
 import { auth } from "../auth";
 
 const GOOGLE_SUB = "google-123";
@@ -40,18 +42,22 @@ let mock: ReturnType<typeof mockGoogle> | null = null;
 afterEach(() => {
   mock?.mockRestore();
   mock = null;
+  vi.restoreAllMocks();
 });
 
 describe("GET /google/callback", () => {
-  it("1. state 불일치 시 400", async () => {
+  it("1. state 불일치 시 state_invalid 리다이렉트", async () => {
     const req = makeCallbackRequest({ cookieState: "A", state: "B" });
     const res = await auth.request(req.path, { headers: req.headers });
 
-    expect(res.status).toBe(400);
-    expect(await res.json()).toEqual({ error: "Invalid state" });
+    expect(res.status).toBe(302);
+    expect(res.headers.get("Location")).toBe(
+      `${FRONTEND_BASE_URL}/auth/callback?status=state_invalid`
+    );
+    expect(res.headers.getSetCookie()).toHaveLength(0);
   });
 
-  it("2. 만료/위조된 code로 OAuth2RequestError 시 400", async () => {
+  it("2. 만료/위조된 code는 code_invalid 리다이렉트", async () => {
     mock = mockGoogle({
       tokenStatus: 400,
       tokenResponse: { error: "invalid_grant" },
@@ -60,8 +66,11 @@ describe("GET /google/callback", () => {
     const req = makeCallbackRequest();
     const res = await auth.request(req.path, { headers: req.headers });
 
-    expect(res.status).toBe(400);
-    expect(await res.json()).toEqual({ error: "OAuth2 request error" });
+    expect(res.status).toBe(302);
+    expect(res.headers.get("Location")).toBe(
+      `${FRONTEND_BASE_URL}/auth/callback?status=code_invalid`
+    );
+    expect(res.headers.getSetCookie()).toHaveLength(0);
   });
 
   it("3. 기존 유저(deletedAt NULL) 로그인 → 302 메인 + 쿠키 + device", async () => {
@@ -271,7 +280,7 @@ describe("GET /google/callback", () => {
     expect(devices).toHaveLength(2);
   });
 
-  it("8. UserInfo 5xx → 502", async () => {
+  it("8. UserInfo 5xx → userinfo_failed 리다이렉트", async () => {
     mock = mockGoogle({
       tokenResponse: { access_token: "google-access", token_type: "Bearer" },
       userinfoResponse: {},
@@ -281,8 +290,11 @@ describe("GET /google/callback", () => {
     const req = makeCallbackRequest();
     const res = await auth.request(req.path, { headers: req.headers });
 
-    expect(res.status).toBe(502);
-    expect(await res.json()).toEqual({ error: "Failed to fetch from Google" });
+    expect(res.status).toBe(302);
+    expect(res.headers.get("Location")).toBe(
+      `${FRONTEND_BASE_URL}/auth/callback?status=userinfo_failed`
+    );
+    expect(res.headers.getSetCookie()).toHaveLength(0);
   });
 
   it("9. 168h 경계(1ms 초과) → hard delete 분기", async () => {
@@ -316,5 +328,142 @@ describe("GET /google/callback", () => {
     // 새 user 1행
     const allUsers = await db.select().from(users);
     expect(allUsers).toHaveLength(1);
+  });
+
+  it.each([
+    ["?code=x", {}, "state_missing"],
+    ["?state=ok", { Cookie: "google_oauth_state=ok" }, "code_missing"],
+    ["?state=ok&code=x", { Cookie: "google_oauth_state=ok" }, "pkce_missing"],
+    [
+      "?state=ok&error=access_denied&error_description=private",
+      { Cookie: "google_oauth_state=ok" },
+      "access_denied",
+    ],
+    [
+      "?state=ok&error=arbitrary-private-error",
+      { Cookie: "google_oauth_state=ok" },
+      "provider_error",
+    ],
+  ] as const)(
+    "callback validation: %s -> %s",
+    async (query, headers, status) => {
+      const response = await auth.request("/google/callback" + query, {
+        headers: { ...headers },
+      });
+      expect(response.status).toBe(302);
+      expect(response.headers.get("Location")).toBe(
+        `${FRONTEND_BASE_URL}/auth/callback?status=${status}`
+      );
+      expect(response.headers.getSetCookie()).toHaveLength(0);
+      expect(await db.select().from(users)).toHaveLength(0);
+    }
+  );
+
+  it("issues a hashed refresh, seven-day expiry, and session-bound CSRF", async () => {
+    mock = mockGoogle({
+      tokenResponse: { access_token: "google-access", token_type: "Bearer" },
+      userinfoResponse: { sub: GOOGLE_SUB },
+    });
+    const req = makeCallbackRequest();
+    const start = Date.now();
+    const response = await auth.request(req.path, { headers: req.headers });
+    const end = Date.now();
+    expect(response.status).toBe(302);
+    const cookies = response.headers.getSetCookie();
+    const refreshCookie = cookies.find((c) => c.startsWith("refresh_token="))!;
+    const csrfCookie = cookies.find((c) => c.startsWith("csrf_token="))!;
+    const refresh = decodeURIComponent(
+      refreshCookie.split(";")[0].slice("refresh_token=".length)
+    );
+    const csrf = decodeURIComponent(
+      csrfCookie.split(";")[0].slice("csrf_token=".length)
+    );
+    const [device] = await db.select().from(userDevices);
+    expect(device.refreshToken).toBe(hashToken(refresh));
+    expect(device.refreshToken).not.toBe(refresh);
+    expect(device.refreshExpiresAt!.getTime()).toBeGreaterThanOrEqual(
+      start + REFRESH_TOKEN_TTL_SECONDS * 1000
+    );
+    expect(device.refreshExpiresAt!.getTime()).toBeLessThanOrEqual(
+      end + REFRESH_TOKEN_TTL_SECONDS * 1000
+    );
+    expect(readCsrfToken(csrf)?.sessionId).toBe(device.id);
+    expect(csrfCookie).not.toContain("HttpOnly");
+    expect(refreshCookie).toContain("HttpOnly");
+    expect(
+      cookies.every((c) => c.includes("Secure") && c.includes("SameSite=Lax"))
+    ).toBe(true);
+  });
+
+  it("uses a generic allowlisted status for network failure, without exposing details", async () => {
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(
+      new Error("private-provider-details")
+    );
+    const req = makeCallbackRequest();
+    const response = await auth.request(req.path, { headers: req.headers });
+    expect(response.status).toBe(302);
+    expect(response.headers.get("Location")).toBe(
+      `${FRONTEND_BASE_URL}/auth/callback?status=google_unavailable`
+    );
+    expect(response.headers.getSetCookie()).toHaveLength(0);
+  });
+
+  it("only allows the configured frontend origin in credentialed preflight", async () => {
+    const allowed = await auth.request("/refresh", {
+      method: "OPTIONS",
+      headers: {
+        Origin: FRONTEND_BASE_URL,
+        "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "X-CSRF-Token",
+      },
+    });
+    expect(allowed.headers.get("Access-Control-Allow-Origin")).toBe(
+      FRONTEND_BASE_URL
+    );
+    expect(allowed.headers.get("Access-Control-Allow-Credentials")).toBe(
+      "true"
+    );
+    const rejected = await auth.request("/refresh", {
+      method: "OPTIONS",
+      headers: {
+        Origin: "https://untrusted.example",
+        "Access-Control-Request-Method": "POST",
+      },
+    });
+    expect(rejected.headers.has("Access-Control-Allow-Origin")).toBe(false);
+  });
+
+  it("distinguishes token exchange rejection without exposing Google's description", async () => {
+    mock = mockGoogle({
+      tokenStatus: 400,
+      tokenResponse: {
+        error: "invalid_client",
+        error_description: "private-client-details",
+      },
+    });
+    const req = makeCallbackRequest();
+    const response = await auth.request(req.path, { headers: req.headers });
+    expect(response.status).toBe(302);
+    expect(response.headers.get("Location")).toBe(
+      `${FRONTEND_BASE_URL}/auth/callback?status=token_exchange_failed`
+    );
+    expect(response.headers.getSetCookie()).toHaveLength(0);
+  });
+
+  it("uses internal_error for unexpected storage errors without leaking exception text", async () => {
+    mock = mockGoogle({
+      tokenResponse: { access_token: "google-access", token_type: "Bearer" },
+      userinfoResponse: { sub: GOOGLE_SUB },
+    });
+    vi.spyOn(db, "transaction").mockRejectedValueOnce(
+      new Error("private-database-error")
+    );
+    const req = makeCallbackRequest();
+    const response = await auth.request(req.path, { headers: req.headers });
+    expect(response.status).toBe(302);
+    expect(response.headers.get("Location")).toBe(
+      `${FRONTEND_BASE_URL}/auth/callback?status=internal_error`
+    );
+    expect(response.headers.getSetCookie()).toHaveLength(0);
   });
 });

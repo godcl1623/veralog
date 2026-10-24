@@ -1,61 +1,79 @@
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { getCookie } from "hono/cookie";
 
 import { db } from "../../../db/client";
 import { userDevices } from "../../../db/schema";
-import { setAuthCookies } from "../../../utils/cookies";
+import { clearAuthCookies, setAuthCookies } from "../../../utils/cookies";
+import { csrfMatchesRefresh, verifyCsrfRequest } from "../../../utils/csrf";
 import { REFRESH_TOKEN_COOKIE_NAME, signAccessToken } from "../../../utils/jwt";
-import { generateRefreshToken, hashToken } from "../../../utils/token";
+import {
+  generateRefreshToken,
+  hashToken,
+  REFRESH_TOKEN_TTL_SECONDS,
+} from "../../../utils/token";
 
 export const refreshRouter = new Hono();
 
 refreshRouter.post("/refresh", async (ctx) => {
+  const csrf = verifyCsrfRequest(ctx);
+  if (!csrf) return ctx.body(null, 403);
   const refreshToken = getCookie(ctx, REFRESH_TOKEN_COOKIE_NAME);
-  if (!refreshToken) {
-    return ctx.json({ error: "Unauthorized" }, 401);
-  }
+  if (!refreshToken) return ctx.body(null, 401);
+  if (!csrfMatchesRefresh(csrf, refreshToken)) return ctx.body(null, 403);
 
   const reqHash = hashToken(refreshToken);
-
   const result = await db.transaction(async (tx) => {
-    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${reqHash}))`);
-
-    const [active] = await tx
+    const [session] = await tx
       .select()
       .from(userDevices)
-      .where(eq(userDevices.refreshToken, reqHash));
+      .where(eq(userDevices.id, csrf.sessionId))
+      .for("update");
+    if (!session) return { kind: "unknown" } as const;
 
-    if (active) {
-      const newRefreshToken = generateRefreshToken();
-      const newHash = hashToken(newRefreshToken);
-      await tx
-        .update(userDevices)
-        .set({
-          previousRefreshTokenHash: reqHash,
-          refreshToken: newHash,
-          lastAccessedAt: new Date(),
-        })
-        .where(eq(userDevices.id, active.id));
-      const accessToken = await signAccessToken(active.userId);
-      return { accessToken, newRefreshToken };
+    if (session.refreshToken !== reqHash) {
+      if (session.previousRefreshTokenHash === reqHash) {
+        await tx.delete(userDevices).where(eq(userDevices.id, session.id));
+      }
+      return { kind: "unknown" } as const;
+    }
+    // Old rows have no trustworthy expiry; do not silently grant a fresh week.
+    if (!session.refreshExpiresAt) return { kind: "unknown" } as const;
+    const now = new Date(Date.now());
+    if (session.refreshExpiresAt.getTime() <= now.getTime()) {
+      await tx.delete(userDevices).where(eq(userDevices.id, session.id));
+      return { kind: "expired" } as const;
     }
 
-    const [stale] = await tx
-      .select()
-      .from(userDevices)
-      .where(eq(userDevices.previousRefreshTokenHash, reqHash));
-
-    if (stale) {
-      await tx.delete(userDevices).where(eq(userDevices.id, stale.id));
-    }
-    return null;
+    const newRefreshToken = generateRefreshToken();
+    await tx
+      .update(userDevices)
+      .set({
+        previousRefreshTokenHash: reqHash,
+        refreshToken: hashToken(newRefreshToken),
+        lastAccessedAt: now,
+        refreshExpiresAt: new Date(
+          now.getTime() + REFRESH_TOKEN_TTL_SECONDS * 1000
+        ),
+      })
+      .where(eq(userDevices.id, session.id));
+    return {
+      kind: "success",
+      sessionId: session.id,
+      accessToken: await signAccessToken(session.userId),
+      refreshToken: newRefreshToken,
+    } as const;
   });
 
-  if (!result) {
-    return ctx.json({ error: "Unauthorized" }, 401);
+  if (result.kind !== "success") {
+    if (result.kind === "expired") clearAuthCookies(ctx);
+    return ctx.body(null, 401);
   }
-
-  setAuthCookies(ctx, result.accessToken, result.newRefreshToken);
-  return ctx.json({ ok: true }, 200);
+  setAuthCookies(
+    ctx,
+    result.accessToken,
+    result.refreshToken,
+    result.sessionId
+  );
+  return ctx.json({ data: null }, 200);
 });

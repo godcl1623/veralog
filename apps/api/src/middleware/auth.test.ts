@@ -46,7 +46,7 @@ describe("authMiddleware", () => {
     const res = await app.request("/protected");
 
     expect(res.status).toBe(401);
-    expect(await res.json()).toEqual({ error: "Unauthorized" });
+    expect(await res.text()).toBe("");
   });
 
   it("잘못된 서명 토큰은 401", async () => {
@@ -62,7 +62,7 @@ describe("authMiddleware", () => {
     });
 
     expect(res.status).toBe(401);
-    expect(await res.json()).toEqual({ error: "Unauthorized" });
+    expect(await res.text()).toBe("");
   });
 
   it("만료된 토큰은 401", async () => {
@@ -82,7 +82,7 @@ describe("authMiddleware", () => {
     });
 
     expect(res.status).toBe(401);
-    expect(await res.json()).toEqual({ error: "Unauthorized" });
+    expect(await res.text()).toBe("");
   });
 
   it("쿠키와 헤더가 모두 있으면 쿠키 값이 우선이다", async () => {
@@ -110,6 +110,20 @@ describe("authMiddleware", () => {
     });
 
     expect(res.status).toBe(401);
-    expect(await res.json()).toEqual({ error: "Unauthorized" });
+    expect(await res.text()).toBe("");
   });
+
+  it.each(["invalid", ""])(
+    "an existing invalid cookie cannot fall back to Bearer: %s",
+    async (cookie) => {
+      const token = await signAccessToken(TEST_USER_ID);
+      const response = await makeApp().request("/protected", {
+        headers: {
+          Cookie: "access_token=" + cookie,
+          Authorization: "Bearer " + token,
+        },
+      });
+      expect(response.status).toBe(401);
+    }
+  );
 });

@@ -24,7 +24,7 @@ declare module "hono" {
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
   let token = getCookie(c, ACCESS_TOKEN_COOKIE_NAME);
 
-  if (!token) {
+  if (token === undefined) {
     const authHeader = c.req.header("Authorization");
     if (authHeader?.startsWith("Bearer ")) {
       token = authHeader.slice(7);
@@ -32,14 +32,14 @@ export const authMiddleware: MiddlewareHandler = async (c, next) => {
   }
 
   if (!token) {
-    return c.json({ error: "Unauthorized" }, 401);
+    return c.body(null, 401);
   }
 
   try {
     const payload = await verifyAccessToken(token);
     c.set("user", { id: payload.sub });
   } catch {
-    return c.json({ error: "Unauthorized" }, 401);
+    return c.body(null, 401);
   }
 
   await next();

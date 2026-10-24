@@ -10,18 +10,38 @@ import { and, eq, sql } from "drizzle-orm";
 import type { Context } from "hono";
 import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
+import { cors } from "hono/cors";
 
 import { db } from "../../../db/client";
 import { userDevices, userOauthAccounts, users } from "../../../db/schema";
 import { setAuthCookies } from "../../../utils/cookies";
+import { isAllowedOrigin } from "../../../utils/csrf";
 import { fetchGoogleUserInfo } from "../../../utils/google";
 import { signAccessToken } from "../../../utils/jwt";
 import { generateRandomNickname } from "../../../utils/nickname";
-import { generateRefreshToken, hashToken } from "../../../utils/token";
+import {
+  OAuthCallbackFailure,
+  redirectOAuthFailure,
+} from "../../../utils/oauth-failure";
+import {
+  generateRefreshToken,
+  hashToken,
+  REFRESH_TOKEN_TTL_SECONDS,
+} from "../../../utils/token";
 import { logoutRouter } from "./logout";
 import { refreshRouter } from "./refresh";
 
 export const auth = new Hono();
+
+auth.use(
+  "*",
+  cors({
+    origin: (origin) => (isAllowedOrigin(origin) ? origin : ""),
+    credentials: true,
+    allowMethods: ["GET", "POST", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization", "X-CSRF-Token"],
+  })
+);
 
 const google = new Google(
   getRequiredEnv("GOOGLE_CLIENT_ID"),
@@ -55,12 +75,12 @@ auth.get("/google", async (ctx) => {
     return ctx.redirect(url.toString());
   } catch (error) {
     if (error instanceof OAuth2RequestError) {
-      return ctx.json({ error: "OAuth2 request error" }, 400);
+      return ctx.body(null, 400);
     }
     if (error instanceof ArcticFetchError) {
-      return ctx.json({ error: "Failed to fetch from Google" }, 502);
+      return ctx.body(null, 502);
     }
-    return ctx.json({ error: "Internal server error" }, 500);
+    return ctx.body(null, 500);
   }
 });
 
@@ -68,12 +88,18 @@ function extractAndValidateState(ctx: Context): { code: string } {
   const code = ctx.req.query("code");
   const queryState = ctx.req.query("state");
   const cookieState = getCookie(ctx, "google_oauth_state");
-  if (!code || !queryState || !cookieState) {
-    throw new Error("Missing code or state");
+  if (!queryState || !cookieState) {
+    throw new OAuthCallbackFailure("state_missing");
   }
   if (queryState !== cookieState) {
-    throw new Error("Invalid state");
+    throw new OAuthCallbackFailure("state_invalid");
   }
+  const error = ctx.req.query("error");
+  if (error)
+    throw new OAuthCallbackFailure(
+      error === "access_denied" ? "access_denied" : "provider_error"
+    );
+  if (!code) throw new OAuthCallbackFailure("code_missing");
   return { code };
 }
 
@@ -83,7 +109,7 @@ async function exchangeCodeForTokens(
 ): Promise<{ accessToken: () => string }> {
   const codeVerifier = getCookie(ctx, "google_oauth_code_verifier");
   if (!codeVerifier) {
-    throw new Error("Missing code verifier");
+    throw new OAuthCallbackFailure("pkce_missing");
   }
   return await google.validateAuthorizationCode(code, codeVerifier);
 }
@@ -94,7 +120,12 @@ async function getOrCreateUser(args: {
   nickname: string;
   avatarUrl: string | undefined;
   deviceName: string | undefined;
-}): Promise<{ userId: string; isNewUser: boolean; refreshToken: string }> {
+}): Promise<{
+  userId: string;
+  isNewUser: boolean;
+  refreshToken: string;
+  sessionId: string;
+}> {
   return await db.transaction(async (tx) => {
     await tx.execute(
       sql`SELECT pg_advisory_xact_lock(hashtext(${args.provider + ":" + args.providerAccountId}))`
@@ -153,14 +184,20 @@ async function getOrCreateUser(args: {
     }
 
     const refreshToken = generateRefreshToken();
-    await tx.insert(userDevices).values({
-      userId,
-      deviceName: args.deviceName,
-      refreshToken: hashToken(refreshToken),
-      lastAccessedAt: new Date(),
-    });
+    const [device] = await tx
+      .insert(userDevices)
+      .values({
+        userId,
+        deviceName: args.deviceName,
+        refreshToken: hashToken(refreshToken),
+        lastAccessedAt: new Date(),
+        refreshExpiresAt: new Date(
+          Date.now() + REFRESH_TOKEN_TTL_SECONDS * 1000
+        ),
+      })
+      .returning({ id: userDevices.id });
 
-    return { userId, isNewUser, refreshToken };
+    return { userId, isNewUser, refreshToken, sessionId: device.id };
   });
 }
 
@@ -168,18 +205,23 @@ auth.get("/google/callback", async (ctx) => {
   try {
     const { code } = extractAndValidateState(ctx);
     const tokens = await exchangeCodeForTokens(code, ctx);
-    const userInfo = await fetchGoogleUserInfo(tokens.accessToken());
+    const userInfo = await fetchGoogleUserInfo(tokens.accessToken()).catch(
+      () => {
+        throw new OAuthCallbackFailure("userinfo_failed");
+      }
+    );
 
-    const { userId, isNewUser, refreshToken } = await getOrCreateUser({
-      provider: "google",
-      providerAccountId: userInfo.sub,
-      nickname: generateRandomNickname(),
-      avatarUrl: userInfo.picture,
-      deviceName: ctx.req.header("User-Agent") ?? undefined,
-    });
+    const { userId, isNewUser, refreshToken, sessionId } =
+      await getOrCreateUser({
+        provider: "google",
+        providerAccountId: userInfo.sub,
+        nickname: generateRandomNickname(),
+        avatarUrl: userInfo.picture,
+        deviceName: ctx.req.header("User-Agent") ?? undefined,
+      });
 
     const accessToken = await signAccessToken(userId);
-    setAuthCookies(ctx, accessToken, refreshToken);
+    setAuthCookies(ctx, accessToken, refreshToken, sessionId);
 
     const frontendBaseUrl = getRequiredEnv("FRONTEND_BASE_URL");
     const target = isNewUser
@@ -187,27 +229,18 @@ auth.get("/google/callback", async (ctx) => {
       : frontendBaseUrl;
     return ctx.redirect(target);
   } catch (error) {
+    if (error instanceof OAuthCallbackFailure)
+      return redirectOAuthFailure(ctx, error.status);
     if (error instanceof OAuth2RequestError) {
-      return ctx.json({ error: "OAuth2 request error" }, 400);
+      return redirectOAuthFailure(
+        ctx,
+        error.code === "invalid_grant"
+          ? "code_invalid"
+          : "token_exchange_failed"
+      );
     }
-    if (error instanceof ArcticFetchError) {
-      return ctx.json({ error: "Failed to fetch from Google" }, 502);
-    }
-    if (
-      error instanceof Error &&
-      error.message.startsWith("UserInfo fetch failed")
-    ) {
-      return ctx.json({ error: "Failed to fetch from Google" }, 502);
-    }
-    if (error instanceof Error && error.message === "Invalid state") {
-      return ctx.json({ error: "Invalid state" }, 400);
-    }
-    if (error instanceof Error && error.message === "Missing code or state") {
-      return ctx.json({ error: "Missing code or state" }, 400);
-    }
-    if (error instanceof Error && error.message === "Missing code verifier") {
-      return ctx.json({ error: "Missing code verifier" }, 400);
-    }
-    return ctx.json({ error: "Internal server error" }, 500);
+    if (error instanceof ArcticFetchError)
+      return redirectOAuthFailure(ctx, "google_unavailable");
+    return redirectOAuthFailure(ctx, "internal_error");
   }
 });
