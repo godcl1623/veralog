@@ -15,6 +15,13 @@
       "when": 1782550868608,
       "tag": "0001_cheerful_umar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792829778623,
+      "tag": "0002_auth_refresh_expiry",
+      "breakpoints": true
     }
   ]
 }

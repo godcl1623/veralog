@@ -8,8 +8,8 @@ import {
 
 describe("token", () => {
   describe("REFRESH_TOKEN_TTL_SECONDS", () => {
-    it("14일 (1209600초)", () => {
-      expect(REFRESH_TOKEN_TTL_SECONDS).toBe(60 * 60 * 24 * 14);
+    it("7일 (604800초)", () => {
+      expect(REFRESH_TOKEN_TTL_SECONDS).toBe(604800);
     });
   });
 

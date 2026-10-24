@@ -71,6 +71,7 @@ export async function createDevice(
     .insert(userDevices)
     .values({
       userId,
+      refreshExpiresAt: new Date(Date.now() + 604800000),
       ...overrides,
     })
     .returning();

@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 
-/** Refresh Token 만료 (초). 14일. */
-export const REFRESH_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 14;
+/** Refresh Token 만료 (초). 7일. */
+export const REFRESH_TOKEN_TTL_SECONDS = 604800;
 
 /** 토큰을 SHA-256 해시한다 (user_devices.refreshToken 저장용). */
 export function hashToken(token: string): string {
