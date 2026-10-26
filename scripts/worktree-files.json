@@ -1,0 +1,4 @@
+{
+  "copy": ["AGENTS.md", ".codex/docs"],
+  "symlink": []
+}

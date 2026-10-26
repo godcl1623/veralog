@@ -1,0 +1,2 @@
+common_dir=$(git rev-parse --path-format=absolute --git-common-dir)
+node "$(dirname "$common_dir")/scripts/worktree-setup.mjs" "$@"
