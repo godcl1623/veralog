@@ -1,5 +1,5 @@
+import { OpenAPIHono } from "@hono/zod-openapi";
 import { eq } from "drizzle-orm";
-import { Hono } from "hono";
 import { getCookie } from "hono/cookie";
 
 import { db } from "../../../db/client";
@@ -12,10 +12,11 @@ import {
   hashToken,
   REFRESH_TOKEN_TTL_SECONDS,
 } from "../../../utils/token";
+import { refreshRoute } from "./contract";
 
-export const refreshRouter = new Hono();
+export const refreshRouter = new OpenAPIHono();
 
-refreshRouter.post("/refresh", async (ctx) => {
+refreshRouter.openapi(refreshRoute, async (ctx) => {
   const csrf = verifyCsrfRequest(ctx);
   if (!csrf) return ctx.body(null, 403);
   const refreshToken = getCookie(ctx, REFRESH_TOKEN_COOKIE_NAME);

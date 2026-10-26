@@ -1,0 +1,11 @@
+{
+  "name": "@veralog/api-contract",
+  "private": true,
+  "version": "0.0.0",
+  "files": [
+    "openapi.json"
+  ],
+  "exports": {
+    "./openapi.json": "./openapi.json"
+  }
+}

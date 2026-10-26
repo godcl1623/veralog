@@ -1,3 +1,4 @@
+import { OpenAPIHono } from "@hono/zod-openapi";
 import { getRequiredEnv } from "@veralog/shared";
 import {
   ArcticFetchError,
@@ -8,7 +9,6 @@ import {
 } from "arctic";
 import { and, eq, sql } from "drizzle-orm";
 import type { Context } from "hono";
-import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { cors } from "hono/cors";
 
@@ -28,10 +28,11 @@ import {
   hashToken,
   REFRESH_TOKEN_TTL_SECONDS,
 } from "../../../utils/token";
+import { googleCallbackRoute, googleStartRoute } from "./contract";
 import { logoutRouter } from "./logout";
 import { refreshRouter } from "./refresh";
 
-export const auth = new Hono();
+export const auth = new OpenAPIHono();
 
 auth.use(
   "*",
@@ -55,7 +56,7 @@ const OAUTH_COOKIE_MAX_AGE = 600; // 10 minutes
 auth.route("/", refreshRouter);
 auth.route("/", logoutRouter);
 
-auth.get("/google", async (ctx) => {
+auth.openapi(googleStartRoute, async (ctx) => {
   try {
     const state = generateState();
     const codeVerifier = generateCodeVerifier();
@@ -201,7 +202,7 @@ async function getOrCreateUser(args: {
   });
 }
 
-auth.get("/google/callback", async (ctx) => {
+auth.openapi(googleCallbackRoute, async (ctx) => {
   try {
     const { code } = extractAndValidateState(ctx);
     const tokens = await exchangeCodeForTokens(code, ctx);

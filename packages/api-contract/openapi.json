@@ -1,0 +1,276 @@
+{
+  "components": {
+    "parameters": {},
+    "schemas": {
+      "AuthEmptyResponse": {
+        "properties": {
+          "data": {
+            "type": "null"
+          }
+        },
+        "required": ["data"],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "AccessCookie": {
+        "in": "cookie",
+        "name": "access_token",
+        "type": "apiKey"
+      },
+      "BearerAuth": {
+        "bearerFormat": "JWT",
+        "description": "Fallback only when access_token cookie is absent.",
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "CsrfCookie": {
+        "in": "cookie",
+        "name": "csrf_token",
+        "type": "apiKey"
+      },
+      "CsrfHeader": {
+        "description": "Must equal the signed csrf_token cookie and be bound to the session and Refresh token. Scheme presence alone cannot express these checks.",
+        "in": "header",
+        "name": "X-CSRF-Token",
+        "type": "apiKey"
+      },
+      "RefreshCookie": {
+        "in": "cookie",
+        "name": "refresh_token",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "title": "Veralog API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/auth/google": {
+      "get": {
+        "description": "Sets HttpOnly, Lax, host-only google_oauth_state and google_oauth_code_verifier cookies for 600s (Secure in production). Not a JSON query operation.",
+        "operationId": "authGoogleStart",
+        "responses": {
+          "302": {
+            "description": "Navigate to Google authorization with state and PKCE.",
+            "headers": {
+              "Location": {
+                "description": "Browser navigation target.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Set-Cookie": {
+                "description": "Separate OAuth state and PKCE cookie headers.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "OAuth request rejected. Empty body."
+          },
+          "500": {
+            "description": "Unexpected sign-in failure. Empty body."
+          },
+          "502": {
+            "description": "OAuth provider unavailable. Empty body."
+          }
+        },
+        "security": [],
+        "summary": "Start Google sign-in through browser navigation",
+        "tags": ["AuthNavigation"]
+      }
+    },
+    "/api/v1/auth/google/callback": {
+      "get": {
+        "description": "Validates state before provider error, code and PKCE checks using existing handler logic. Success navigates to the frontend base URL, or /terms?new=true for new users, and sets authentication cookies. Failure navigates to /auth/callback?status=access_denied|provider_error|state_missing|state_invalid|code_missing|pkce_missing|code_invalid|token_exchange_failed|google_unavailable|userinfo_failed|internal_error. No tokens or raw provider errors enter the URL. Not a JSON query operation.",
+        "operationId": "authGoogleCallback",
+        "parameters": [
+          {
+            "description": "Conditional OAuth callback value. Missing/invalid values follow existing redirect handling, not schema validation errors.",
+            "in": "query",
+            "name": "code",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Conditional OAuth callback value. Missing/invalid values follow existing redirect handling, not schema validation errors.",
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Conditional OAuth callback value. Missing/invalid values follow existing redirect handling, not schema validation errors.",
+            "in": "query",
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "OAuth state/PKCE cookie required for successful callback. Failure redirects to the frontend.",
+            "in": "cookie",
+            "name": "google_oauth_state",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "OAuth state/PKCE cookie required for successful callback. Failure redirects to the frontend.",
+            "in": "cookie",
+            "name": "google_oauth_code_verifier",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Success or classified OAuth failure navigation.",
+            "headers": {
+              "Location": {
+                "description": "Browser navigation target.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Set-Cookie": {
+                "description": "Separate Set-Cookie headers for access_token, refresh_token and csrf_token. Secure; SameSite=Lax; Path=/; host-only. Access/Refresh are HttpOnly; CSRF is readable. Access TTL 900s; Refresh/CSRF TTL 604800s.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Handle Google callback and navigate to the frontend",
+        "tags": ["AuthNavigation"]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "delete": {
+        "description": "No request body. Access cookie is checked first; Bearer is considered only when that cookie is absent, not invalid/empty. Access authentication precedes CSRF verification. Requires allowed Origin and matching signed CSRF cookie/header bound to Refresh. Revokes only this device; other sessions remain. An already-issued Access token may remain valid for its remaining 900s lifetime; ordinary Access validation does not query the DB. Success clears all three cookies with Max-Age=0, rather than renewing them.",
+        "operationId": "authLogout",
+        "parameters": [
+          {
+            "description": "Must match the configured allowed origin. Missing/null is rejected.",
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthEmptyResponse"
+                }
+              }
+            },
+            "description": "Success. The data property is required and always null.",
+            "headers": {
+              "Set-Cookie": {
+                "description": "Separate deletion headers for access_token, refresh_token and csrf_token; Max-Age=0; Secure; SameSite=Lax; Path=/; host-only. Access/Refresh are HttpOnly.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed. Empty response body."
+          },
+          "403": {
+            "description": "Origin or CSRF verification failed. Empty response body."
+          }
+        },
+        "security": [
+          {
+            "AccessCookie": [],
+            "CsrfCookie": [],
+            "CsrfHeader": [],
+            "RefreshCookie": []
+          },
+          {
+            "BearerAuth": [],
+            "CsrfCookie": [],
+            "CsrfHeader": [],
+            "RefreshCookie": []
+          }
+        ],
+        "summary": "Revoke this device's refresh session and clear authentication cookies",
+        "tags": ["AuthSession"]
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "description": "No request body. Refresh cookie only; Bearer is not accepted. Requires allowed Origin and matching CSRF cookie/header signed for the session and Refresh token. CSRF checks precede session lookup. Refresh expires after 604800s, extended on rotation. Rotation locks the device row; replay of the previous token revokes that session. Expired sessions clear authentication cookies; other 401/403 responses do not promise cookie changes.",
+        "operationId": "authRefresh",
+        "parameters": [
+          {
+            "description": "Must match the configured allowed origin. Missing/null is rejected.",
+            "in": "header",
+            "name": "Origin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthEmptyResponse"
+                }
+              }
+            },
+            "description": "Success. The data property is required and always null.",
+            "headers": {
+              "Set-Cookie": {
+                "description": "Separate Set-Cookie headers for access_token, refresh_token and csrf_token. Secure; SameSite=Lax; Path=/; host-only. Access/Refresh are HttpOnly; CSRF is readable. Access TTL 900s; Refresh/CSRF TTL 604800s.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed. Empty response body."
+          },
+          "403": {
+            "description": "Origin or CSRF verification failed. Empty response body."
+          }
+        },
+        "security": [
+          {
+            "CsrfCookie": [],
+            "CsrfHeader": [],
+            "RefreshCookie": []
+          }
+        ],
+        "summary": "Rotate this device's refresh session and authentication cookies",
+        "tags": ["AuthSession"]
+      }
+    }
+  },
+  "webhooks": {}
+}
