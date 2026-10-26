@@ -18,11 +18,13 @@
   "type": "module",
   "dependencies": {
     "@hono/node-server": "^2.0.4",
+    "@hono/zod-openapi": "1.6.3",
     "@veralog/shared": "workspace:*",
     "arctic": "^3.7.0",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.25",
-    "postgres": "^3.4.9"
+    "postgres": "^3.4.9",
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",

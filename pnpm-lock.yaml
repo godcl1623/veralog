@@ -1,258 +1,3 @@
----
-lockfileVersion: "9.0"
-
-importers:
-  .:
-    configDependencies: {}
-    packageManagerDependencies:
-      "@pnpm/exe":
-        specifier: ^11.6.0
-        version: 11.6.0
-      pnpm:
-        specifier: ^11.6.0
-        version: 11.6.0
-
-packages:
-  "@pnpm/exe@11.6.0":
-    resolution:
-      {
-        integrity: sha512-CguaA9vPwP8IMpgbGp2Pbhek7GxvAWvm7orXaguA5Hr07BVvCiQqH5O0FbLwMdTBos0wb8AvsTHlZrLGehkQHw==,
-      }
-    hasBin: true
-
-  "@pnpm/linux-arm64@11.6.0":
-    resolution:
-      {
-        integrity: sha512-NaGjtSDjXt1xI0i7oZgOZREEpWVf4+1jtNVUoCKwp0kTm10S5kd98IHoaHtlYCQ+sHRTezFsNq4ex42lbq2Nug==,
-      }
-    cpu: [arm64]
-    os: [linux]
-
-  "@pnpm/linux-x64@11.6.0":
-    resolution:
-      {
-        integrity: sha512-9KUcSliUBxaLz/9Zvulnb3gy6K1UW86uuVHA65yX36I2Bqs151E+roMfVlLJqhfK+p+GP5xaUpLdNbmDj/bskg==,
-      }
-    cpu: [x64]
-    os: [linux]
-
-  "@pnpm/linuxstatic-arm64@11.6.0":
-    resolution:
-      {
-        integrity: sha512-iqGJk/3v/Thrr/7ngDMK7knmjdkG162zz3cnvkeYqj/bvnpQU6LrfCBLjncaSUbEuekpnDj7Y7Ob1dtWpGp+lA==,
-      }
-    cpu: [arm64]
-    os: [linux]
-    libc: [musl]
-
-  "@pnpm/linuxstatic-x64@11.6.0":
-    resolution:
-      {
-        integrity: sha512-R+aKPOmTrXym7hcpmsQMPj8BgqWTkQyMbLMhozKWal3vQ/AaN7JlIzuL8ZG+1kn+o+7cQ6woG6esK54ZCFtfPg==,
-      }
-    cpu: [x64]
-    os: [linux]
-    libc: [musl]
-
-  "@pnpm/macos-arm64@11.6.0":
-    resolution:
-      {
-        integrity: sha512-vN9NjAn0rC9qIwnSkEY6Ep330HvZGP0umR/VYcH2xNcKzTclhlLVngXfAl70pxDu2VqcHo6+n/XVp7PwLG6JuA==,
-      }
-    cpu: [arm64]
-    os: [darwin]
-
-  "@pnpm/win-arm64@11.6.0":
-    resolution:
-      {
-        integrity: sha512-ubXglpUji9C3AEWMBsadgDvMF1hKRuO8kg/UjY4RDWO/omMVR0gt87B7guLGnuWYOZOyBgqvE6SdnP84w1wMyA==,
-      }
-    cpu: [arm64]
-    os: [win32]
-
-  "@pnpm/win-x64@11.6.0":
-    resolution:
-      {
-        integrity: sha512-3PuRzVgr/uoGBnICdUHox04hjebH1KZUsH4nz3o8RrGOFa9FCcIezRIOd8M+wrw8buvWFH5ZavFDucEynLzLRw==,
-      }
-    cpu: [x64]
-    os: [win32]
-
-  "@reflink/reflink-darwin-arm64@0.1.19":
-    resolution:
-      {
-        integrity: sha512-ruy44Lpepdk1FqDz38vExBY/PVUsjxZA+chd9wozjUH9JjuDT/HEaQYA6wYN9mf041l0yLVar6BCZuWABJvHSA==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [darwin]
-
-  "@reflink/reflink-darwin-x64@0.1.19":
-    resolution:
-      {
-        integrity: sha512-By85MSWrMZa+c26TcnAy8SDk0sTUkYlNnwknSchkhHpGXOtjNDUOxJE9oByBnGbeuIE1PiQsxDG3Ud+IVV9yuA==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [darwin]
-
-  "@reflink/reflink-linux-arm64-gnu@0.1.19":
-    resolution:
-      {
-        integrity: sha512-7P+er8+rP9iNeN+bfmccM4hTAaLP6PQJPKWSA4iSk2bNvo6KU6RyPgYeHxXmzNKzPVRcypZQTpFgstHam6maVg==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [linux]
-    libc: [glibc]
-
-  "@reflink/reflink-linux-arm64-musl@0.1.19":
-    resolution:
-      {
-        integrity: sha512-37iO/Dp6m5DDaC2sf3zPtx/hl9FV3Xze4xoYidrxxS9bgP3S8ALroxRK6xBG/1TtfXKTvolvp+IjrUU6ujIGmA==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [linux]
-    libc: [musl]
-
-  "@reflink/reflink-linux-x64-gnu@0.1.19":
-    resolution:
-      {
-        integrity: sha512-jbI8jvuYCaA3MVUdu8vLoLAFqC+iNMpiSuLbxlAgg7x3K5bsS8nOpTRnkLF7vISJ+rVR8W+7ThXlXlUQ93ulkw==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [linux]
-    libc: [glibc]
-
-  "@reflink/reflink-linux-x64-musl@0.1.19":
-    resolution:
-      {
-        integrity: sha512-e9FBWDe+lv7QKAwtKOt6A2W/fyy/aEEfr0g6j/hWzvQcrzHCsz07BNQYlNOjTfeytrtLU7k449H1PI95jA4OjQ==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [linux]
-    libc: [musl]
-
-  "@reflink/reflink-win32-arm64-msvc@0.1.19":
-    resolution:
-      {
-        integrity: sha512-09PxnVIQcd+UOn4WAW73WU6PXL7DwGS6wPlkMhMg2zlHHG65F3vHepOw06HFCq+N42qkaNAc8AKIabWvtk6cIQ==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [win32]
-
-  "@reflink/reflink-win32-x64-msvc@0.1.19":
-    resolution:
-      {
-        integrity: sha512-E//yT4ni2SyhwP8JRjVGWr3cbnhWDiPLgnQ66qqaanjjnMiu3O/2tjCPQXlcGc/DEYofpDc9fvhv6tALQsMV9w==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [win32]
-
-  "@reflink/reflink@0.1.19":
-    resolution:
-      {
-        integrity: sha512-DmCG8GzysnCZ15bres3N5AHCmwBwYgp0As6xjhQ47rAUTUXxJiK+lLUxaGsX3hd/30qUpVElh05PbGuxRPgJwA==,
-      }
-    engines: { node: ">= 10" }
-
-  detect-libc@2.1.2:
-    resolution:
-      {
-        integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==,
-      }
-    engines: { node: ">=8" }
-
-  pnpm@11.6.0:
-    resolution:
-      {
-        integrity: sha512-mjZRgiQIDG/lFlr9z+eb+hGMKb5wPz9GKx4y7+HpjkfodQsUjggoYlCq1BE8x5k8pBPE4s1Ed1JwjC7ldRvJXw==,
-      }
-    engines: { node: ">=22.13" }
-    hasBin: true
-
-snapshots:
-  "@pnpm/exe@11.6.0":
-    dependencies:
-      "@reflink/reflink": 0.1.19
-      detect-libc: 2.1.2
-    optionalDependencies:
-      "@pnpm/linux-arm64": 11.6.0
-      "@pnpm/linux-x64": 11.6.0
-      "@pnpm/linuxstatic-arm64": 11.6.0
-      "@pnpm/linuxstatic-x64": 11.6.0
-      "@pnpm/macos-arm64": 11.6.0
-      "@pnpm/win-arm64": 11.6.0
-      "@pnpm/win-x64": 11.6.0
-
-  "@pnpm/linux-arm64@11.6.0":
-    optional: true
-
-  "@pnpm/linux-x64@11.6.0":
-    optional: true
-
-  "@pnpm/linuxstatic-arm64@11.6.0":
-    optional: true
-
-  "@pnpm/linuxstatic-x64@11.6.0":
-    optional: true
-
-  "@pnpm/macos-arm64@11.6.0":
-    optional: true
-
-  "@pnpm/win-arm64@11.6.0":
-    optional: true
-
-  "@pnpm/win-x64@11.6.0":
-    optional: true
-
-  "@reflink/reflink-darwin-arm64@0.1.19":
-    optional: true
-
-  "@reflink/reflink-darwin-x64@0.1.19":
-    optional: true
-
-  "@reflink/reflink-linux-arm64-gnu@0.1.19":
-    optional: true
-
-  "@reflink/reflink-linux-arm64-musl@0.1.19":
-    optional: true
-
-  "@reflink/reflink-linux-x64-gnu@0.1.19":
-    optional: true
-
-  "@reflink/reflink-linux-x64-musl@0.1.19":
-    optional: true
-
-  "@reflink/reflink-win32-arm64-msvc@0.1.19":
-    optional: true
-
-  "@reflink/reflink-win32-x64-msvc@0.1.19":
-    optional: true
-
-  "@reflink/reflink@0.1.19":
-    optionalDependencies:
-      "@reflink/reflink-darwin-arm64": 0.1.19
-      "@reflink/reflink-darwin-x64": 0.1.19
-      "@reflink/reflink-linux-arm64-gnu": 0.1.19
-      "@reflink/reflink-linux-arm64-musl": 0.1.19
-      "@reflink/reflink-linux-x64-gnu": 0.1.19
-      "@reflink/reflink-linux-x64-musl": 0.1.19
-      "@reflink/reflink-win32-arm64-msvc": 0.1.19
-      "@reflink/reflink-win32-x64-msvc": 0.1.19
-
-  detect-libc@2.1.2: {}
-
-  pnpm@11.6.0: {}
-
-  packages/shared: {}
-
----
 lockfileVersion: "9.0"
 
 settings:
@@ -316,6 +61,9 @@ importers:
       "@hono/node-server":
         specifier: ^2.0.4
         version: 2.0.4(hono@4.12.25)
+      "@hono/zod-openapi":
+        specifier: 1.6.3
+        version: 1.6.3(hono@4.12.25)(zod@4.6.7)
       "@veralog/shared":
         specifier: workspace:*
         version: link:../../packages/shared
@@ -331,6 +79,9 @@ importers:
       postgres:
         specifier: ^3.4.9
         version: 3.4.9
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       "@types/node":
         specifier: ^25.9.3
@@ -340,7 +91,7 @@ importers:
         version: 0.31.10
       vitest:
         specifier: ^4.1.8
-        version: 4.1.8(@types/node@25.9.3)(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+        version: 4.1.8(@types/node@25.9.3)(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.1))
 
   apps/web:
     dependencies:
@@ -393,8 +144,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       zod:
-        specifier: ^4.4.3
-        version: 4.4.3
+        specifier: 4.6.7
+        version: 4.6.7
       zustand:
         specifier: ^5.0.14
         version: 5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
@@ -439,15 +190,15 @@ importers:
   packages/shared:
     dependencies:
       zod:
-        specifier: ^4.4.3
-        version: 4.4.3
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       "@types/node":
         specifier: ^25.9.3
         version: 25.9.3
       vitest:
         specifier: ^4.1.8
-        version: 4.1.8(@types/node@25.9.3)(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+        version: 4.1.8(@types/node@25.9.3)(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.1))
 
 packages:
   "@adobe/css-tools@4.5.0":
@@ -455,6 +206,14 @@ packages:
       {
         integrity: sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q==,
       }
+
+  "@asteasolutions/zod-to-openapi@9.1.0":
+    resolution:
+      {
+        integrity: sha512-pLMeRgRYS7/vZIgAAkOe2P6+XGTifR1MT9pqDoxZ11EmcJJ+DPmdPqLN8ZZF4U8R9KHCCQCS9c2wtuE8wSrfkw==,
+      }
+    peerDependencies:
+      zod: ^4.0.0
 
   "@babel/code-frame@7.29.7":
     resolution:
@@ -751,14 +510,14 @@ packages:
       {
         integrity: sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ==,
       }
-    deprecated: "Merged into tsx: https://tsx.is"
+    deprecated: "Merged into tsx: https://tsx.hirok.io"
 
   "@esbuild-kit/esm-loader@2.6.5":
     resolution:
       {
         integrity: sha512-FxEMIkJKnodyA1OaCUoEvbYRkoZlLZ4d/eXFu9Fh8CbBBgP5EmZxrfTRyN0qpXZ4vOvqnE5YdRdcrmUUXuU+dA==,
       }
-    deprecated: "Merged into tsx: https://tsx.is"
+    deprecated: "Merged into tsx: https://tsx.hirok.io"
 
   "@esbuild/aix-ppc64@0.25.12":
     resolution:
@@ -1540,6 +1299,25 @@ packages:
     peerDependencies:
       hono: ^4
 
+  "@hono/zod-openapi@1.6.3":
+    resolution:
+      {
+        integrity: sha512-VYR82Y60plu8g3pN60OUXMVKpmxh3R04Qs++3DY9vtwZ9/sA/BRY0PcRIR+Z37/3itWtM7pYwT9bKiH9JhqV6Q==,
+      }
+    engines: { node: ">=16.0.0" }
+    peerDependencies:
+      hono: ">=4.10.0"
+      zod: ^4.0.0
+
+  "@hono/zod-validator@0.9.1":
+    resolution:
+      {
+        integrity: sha512-iiv6w0qrIc0arfvCtUqBWsvl4fXjzaTcQcCJTTtCnkawF9HHGE+KjEl0ox3gQJ6rKZEgE3mLExlQCF72M+mNuw==,
+      }
+    peerDependencies:
+      hono: ">=4.11.2"
+      zod: ^3.25.0 || ^4.0.0
+
   "@hookform/resolvers@5.4.0":
     resolution:
       {
@@ -1743,18 +1521,21 @@ packages:
       {
         integrity: sha512-zw/wn0sj0j0QKbIXfIlnEcTviaCzYOY3V5rAyjR6YtOByFtJiT574+8p9Wlach0lZH9fddD4yb9laEAIl4vXQA==,
       }
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   "@oslojs/binary@1.0.0":
     resolution:
       {
         integrity: sha512-9RCU6OwXU6p67H4NODbuxv2S3eenuQ4/WFLrsq+K/k682xrznH5EVWA7N4VFk9VYVcbFtKqur5YQQZc0ySGhsQ==,
       }
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   "@oslojs/crypto@1.0.1":
     resolution:
       {
         integrity: sha512-7n08G8nWjAr/Yu3vu9zzrd0L9XnrJfpMioQcvCMxBIiF5orECHe5/3J0jmXRVvgfqMm/+4oxlQ+Sq39COYLcNQ==,
       }
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   "@oslojs/encoding@0.4.1":
     resolution:
@@ -1773,6 +1554,7 @@ packages:
       {
         integrity: sha512-bLE7BtHrURedCn4Mco3ma9L4Y1GR2SMBuIvjWr7rmQ4/W/4Jy70TIAgZ+0nIlk0xHz1vNP8x8DCns45Sb2XRbg==,
       }
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   "@oxc-project/types@0.133.0":
     resolution:
@@ -2556,6 +2338,7 @@ packages:
       {
         integrity: sha512-ZMQ+f6VazDgUJOd+qNV+H7GohNSYal1mVjm5kEaZfE2Ifb7Ss70w+Q7xpJC87qZDkMZIXYf0pTIYZA0OPasSbw==,
       }
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   argparse@2.0.1:
     resolution:
@@ -4662,6 +4445,12 @@ packages:
       }
     engines: { node: ">=12" }
 
+  openapi3-ts@4.6.2:
+    resolution:
+      {
+        integrity: sha512-gyyil3DweqhXiEhTqtAs9wwRLfWHmetwhI4kmM5Rn0d6gtmK863Ki7qqbQnp9+Wwlqoe3B1LFWj7kMp5ctE4rQ==,
+      }
+
   optionator@0.9.4:
     resolution:
       {
@@ -5906,6 +5695,14 @@ packages:
     engines: { node: ">= 14.6" }
     hasBin: true
 
+  yaml@2.9.1:
+    resolution:
+      {
+        integrity: sha512-3NxN8+78OdzbT7C/WjGsyfPAtJaN3FNDsWxv7Y7mcDsT/oOmgW8BpyQQFFBnvZE3j9Y2Sdz1ULFLezL7Eb2yFw==,
+      }
+    engines: { node: ">= 14.6" }
+    hasBin: true
+
   yargs-parser@21.1.1:
     resolution:
       {
@@ -5970,6 +5767,12 @@ packages:
         integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==,
       }
 
+  zod@4.6.7:
+    resolution:
+      {
+        integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==,
+      }
+
   zustand@5.0.14:
     resolution:
       {
@@ -5993,6 +5796,11 @@ packages:
 
 snapshots:
   "@adobe/css-tools@4.5.0": {}
+
+  "@asteasolutions/zod-to-openapi@9.1.0(zod@4.6.7)":
+    dependencies:
+      openapi3-ts: 4.6.2
+      zod: 4.6.7
 
   "@babel/code-frame@7.29.7":
     dependencies:
@@ -6537,6 +6345,19 @@ snapshots:
     dependencies:
       hono: 4.12.25
 
+  "@hono/zod-openapi@1.6.3(hono@4.12.25)(zod@4.6.7)":
+    dependencies:
+      "@asteasolutions/zod-to-openapi": 9.1.0(zod@4.6.7)
+      "@hono/zod-validator": 0.9.1(hono@4.12.25)(zod@4.6.7)
+      hono: 4.12.25
+      openapi3-ts: 4.6.2
+      zod: 4.6.7
+
+  "@hono/zod-validator@0.9.1(hono@4.12.25)(zod@4.6.7)":
+    dependencies:
+      hono: 4.12.25
+      zod: 4.6.7
+
   "@hookform/resolvers@5.4.0(react-hook-form@7.78.0(react@19.2.7))":
     dependencies:
       "@standard-schema/utils": 0.3.0
@@ -7060,14 +6881,14 @@ snapshots:
       msw: 2.14.6(@types/node@24.13.2)(typescript@6.0.3)
       vite: 8.0.16(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
 
-  "@vitest/mocker@4.1.8(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))":
+  "@vitest/mocker@4.1.8(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.1))":
     dependencies:
       "@vitest/spy": 4.1.8
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
       msw: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)
-      vite: 8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
+      vite: 8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.1)
 
   "@vitest/pretty-format@4.1.8":
     dependencies:
@@ -8308,6 +8129,10 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
+  openapi3-ts@4.6.2:
+    dependencies:
+      yaml: 2.9.1
+
   optionator@0.9.4:
     dependencies:
       deep-is: 0.1.4
@@ -8892,7 +8717,7 @@ snapshots:
       tsx: 4.22.4
       yaml: 2.9.0
 
-  vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0):
+  vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.1):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
@@ -8905,7 +8730,7 @@ snapshots:
       fsevents: 2.3.3
       jiti: 2.7.0
       tsx: 4.22.4
-      yaml: 2.9.0
+      yaml: 2.9.1
 
   vitest@4.1.8(@types/node@24.13.2)(msw@2.14.6(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)):
     dependencies:
@@ -8934,10 +8759,10 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
-  vitest@4.1.8(@types/node@25.9.3)(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)):
+  vitest@4.1.8(@types/node@25.9.3)(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.1)):
     dependencies:
       "@vitest/expect": 4.1.8
-      "@vitest/mocker": 4.1.8(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+      "@vitest/mocker": 4.1.8(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.1))
       "@vitest/pretty-format": 4.1.8
       "@vitest/runner": 4.1.8
       "@vitest/snapshot": 4.1.8
@@ -8954,7 +8779,7 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
+      vite: 8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       "@types/node": 25.9.3
@@ -9019,6 +8844,8 @@ snapshots:
   yaml@2.9.0:
     optional: true
 
+  yaml@2.9.1: {}
+
   yargs-parser@21.1.1: {}
 
   yargs@17.7.2:
@@ -9050,6 +8877,8 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.4.3: {}
+
+  zod@4.6.7: {}
 
   zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
     optionalDependencies:
