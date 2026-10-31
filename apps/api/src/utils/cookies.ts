@@ -47,3 +47,36 @@ export function clearAuthCookies(ctx: Context): void {
     maxAge: 0,
   });
 }
+
+export type AuthCookieBundle = {
+  accessToken: string;
+  refreshToken: string;
+  csrfToken: string;
+  accessExpiresAt: number;
+  refreshExpiresAt: number;
+};
+
+export function setAuthCookieBundle(
+  ctx: Context,
+  bundle: AuthCookieBundle,
+  now: number
+): void {
+  const remaining = (expiresAt: number) =>
+    Math.max(0, Math.floor((expiresAt - now) / 1000));
+  setCookie(ctx, ACCESS_TOKEN_COOKIE_NAME, bundle.accessToken, {
+    ...baseOpts,
+    maxAge: remaining(bundle.accessExpiresAt),
+    expires: new Date(bundle.accessExpiresAt),
+  });
+  setCookie(ctx, REFRESH_TOKEN_COOKIE_NAME, bundle.refreshToken, {
+    ...baseOpts,
+    maxAge: remaining(bundle.refreshExpiresAt),
+    expires: new Date(bundle.refreshExpiresAt),
+  });
+  setCookie(ctx, CSRF_COOKIE_NAME, bundle.csrfToken, {
+    ...baseOpts,
+    httpOnly: false,
+    maxAge: remaining(bundle.refreshExpiresAt),
+    expires: new Date(bundle.refreshExpiresAt),
+  });
+}

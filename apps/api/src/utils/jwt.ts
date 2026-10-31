@@ -29,8 +29,11 @@ export type AccessTokenPayload = {
  * @param userId - 사용자 ID (users.id)
  * @returns 서명된 JWT 문자열 (HS256, 15분 만료)
  */
-export async function signAccessToken(userId: string): Promise<string> {
-  const now = Math.floor(Date.now() / 1000);
+export async function signAccessToken(
+  userId: string,
+  issuedAt = Date.now()
+): Promise<string> {
+  const now = Math.floor(issuedAt / 1000);
   return Jwt.sign(
     { sub: userId, iat: now, exp: now + ACCESS_TOKEN_TTL_SECONDS },
     JWT_SECRET,

@@ -3,7 +3,11 @@ import { randomUUID } from "node:crypto";
 import { Hono } from "hono";
 import { describe, expect, it } from "vitest";
 
-import { clearAuthCookies, setAuthCookies } from "./cookies";
+import {
+  clearAuthCookies,
+  setAuthCookieBundle,
+  setAuthCookies,
+} from "./cookies";
 import { csrfMatchesRefresh, readCsrfToken } from "./csrf";
 
 describe("authentication cookie contract", () => {
@@ -56,4 +60,27 @@ describe("authentication cookie contract", () => {
       expect(cookie).toContain("Path=/");
     }
   });
+});
+
+it("replays identical values with absolute expiry and only their remaining lifetimes", async () => {
+  const bundle = {
+    accessToken: "same-access",
+    refreshToken: "same-refresh",
+    csrfToken: "same-csrf",
+    accessExpiresAt: 900_000,
+    refreshExpiresAt: 604_800_000,
+  };
+  const app = new Hono();
+  app.get("/", (c) => {
+    setAuthCookieBundle(c, bundle, 2_500);
+    return c.body(null, 204);
+  });
+  const response = await app.request("/");
+  const cookies = response.headers.getSetCookie();
+  expect(cookies[0]).toContain("access_token=same-access");
+  expect(cookies[0]).toContain("Max-Age=897");
+  expect(cookies[0]).toContain(new Date(bundle.accessExpiresAt).toUTCString());
+  expect(cookies[1]).toContain("Max-Age=604797");
+  expect(cookies[2]).toContain("csrf_token=same-csrf");
+  expect(cookies[2]).not.toContain("HttpOnly");
 });
