@@ -107,7 +107,7 @@ export const useAuthLogout = <TError = ErrorType<void>, TContext = unknown>(
 };
 
 /**
- * No request body. Refresh cookie only; Bearer is not accepted. Requires allowed Origin and matching CSRF cookie/header signed for the session and Refresh token. CSRF checks precede session lookup. Refresh expires after 604800s, extended on rotation. Rotation locks the device row; replay of the previous token revokes that session. Expired sessions clear authentication cookies; other 401/403 responses do not promise cookie changes.
+ * No request body. Refresh cookie only; Bearer is not accepted. Requires allowed Origin and matching CSRF cookie/header signed for the session and Refresh token. CSRF checks precede session lookup. Refresh expires after 604800s, extended on rotation. Rotation locks the device row. Reuse of the immediately previous token strictly before 10 seconds after rotation returns the same Access/Refresh/CSRF without extending any lifetime or replay deadline. At or after 10 seconds it revokes only that session; older unknown tokens are rejected without arbitrary session deletion. Deleted, expired or superseded results are never replayed. Expired sessions clear authentication cookies; other 401/403 responses do not promise cookie changes.
  * @summary Rotate this device's refresh session and authentication cookies
  */
 export const authRefresh = (

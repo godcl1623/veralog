@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 // The user permits test processes to load credentials without exposing them.
-process.loadEnvFile(".env");
+if (!process.env.DATABASE_URL_TEST) process.loadEnvFile(".env");
 
 let target: URL;
 try {
@@ -35,6 +35,10 @@ export default defineConfig({
       fileURLToPath(new URL("./src/test/auth-setup.ts", import.meta.url)),
     ],
     env: {
+      AUTH_REFRESH_REPLAY_ACTIVE_KEY_ID: "test-v1",
+      AUTH_REFRESH_REPLAY_KEYS: JSON.stringify([
+        { id: "test-v1", key: Buffer.alloc(32, 7).toString("base64") },
+      ]),
       JWT_SECRET: "veralog-auth-test-signing-key-not-for-production",
       GOOGLE_CLIENT_ID: "auth-test-client",
       GOOGLE_CLIENT_SECRET: "auth-test-client-secret",

@@ -10,7 +10,7 @@ const emptyErrors = {
 const authCookieHeaders = {
   "Set-Cookie": {
     description:
-      "Separate Set-Cookie headers for access_token, refresh_token and csrf_token. Secure; SameSite=Lax; Path=/; host-only. Access/Refresh are HttpOnly; CSRF is readable. Access TTL 900s; Refresh/CSRF TTL 604800s.",
+      "Separate Set-Cookie headers for access_token, refresh_token and csrf_token. Secure; SameSite=Lax; Path=/; host-only. Access/Refresh are HttpOnly; CSRF is readable. New Access TTL 900s; new Refresh/CSRF TTL 604800s. A refresh replay repeats identical token values with only their remaining absolute lifetimes.",
     schema: { type: "string" as const },
   },
 };
@@ -105,10 +105,17 @@ export const refreshRoute = createRoute({
   tags: ["AuthSession"],
   summary: "Rotate this device's refresh session and authentication cookies",
   description:
-    "No request body. Refresh cookie only; Bearer is not accepted. Requires allowed Origin and matching CSRF cookie/header signed for the session and Refresh token. CSRF checks precede session lookup. Refresh expires after 604800s, extended on rotation. Rotation locks the device row; replay of the previous token revokes that session. Expired sessions clear authentication cookies; other 401/403 responses do not promise cookie changes.",
+    "No request body. Refresh cookie only; Bearer is not accepted. Requires allowed Origin and matching CSRF cookie/header signed for the session and Refresh token. CSRF checks precede session lookup. Refresh expires after 604800s, extended on rotation. Rotation locks the device row. Reuse of the immediately previous token strictly before 10 seconds after rotation returns the same Access/Refresh/CSRF without extending any lifetime or replay deadline. At or after 10 seconds it revokes only that session; older unknown tokens are rejected without arbitrary session deletion. Deleted, expired or superseded results are never replayed. Expired sessions clear authentication cookies; other 401/403 responses do not promise cookie changes.",
   parameters: csrfParameters,
   security: [csrfSecurity],
-  responses: { 200: successResponse, ...emptyErrors },
+  responses: {
+    200: successResponse,
+    ...emptyErrors,
+    500: {
+      description:
+        "Session storage or encrypted replay failure. Empty body; no authentication cookie changes.",
+    },
+  },
 });
 
 export const logoutRoute = createRoute({

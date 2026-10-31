@@ -24,5 +24,5 @@ if (!databaseUrlTest.includes(TEST_URL_MARKER)) {
   );
 }
 
-const client = postgres(databaseUrlTest, { max: 1 });
+const client = postgres(databaseUrlTest, { max: 2 });
 export const db = drizzle(client, { schema });

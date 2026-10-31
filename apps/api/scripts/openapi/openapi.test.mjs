@@ -304,3 +304,18 @@ test("offline export imports no application environment, DB or server modules", 
     assert.match(denied.stderr, /Forbidden external side effect/);
   }
 });
+
+test("refresh advertises bounded replay and empty infrastructure failures without token JSON", () => {
+  const operation = createDocument().paths["/api/v1/auth/refresh"].post;
+  assert.match(operation.description, /strictly before 10 seconds/);
+  assert.match(operation.description, /without extending any lifetime/);
+  assert.equal(operation.responses[500].content, undefined);
+  assert.match(
+    operation.responses[500].description,
+    /no authentication cookie changes/
+  );
+  assert.match(
+    operation.responses[200].headers["Set-Cookie"].description,
+    /remaining absolute lifetimes/
+  );
+});

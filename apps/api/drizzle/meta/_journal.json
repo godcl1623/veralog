@@ -22,6 +22,13 @@
       "when": 1792829778623,
       "tag": "0002_auth_refresh_expiry",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793452030786,
+      "tag": "0003_auth_refresh_replay",
+      "breakpoints": true
     }
   ]
 }
