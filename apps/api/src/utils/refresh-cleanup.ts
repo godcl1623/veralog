@@ -14,3 +14,28 @@ export async function clearExpiredRefreshResults(): Promise<void> {
       )
     );
 }
+
+export function startRefreshReplayCleanup(
+  cleanup = clearExpiredRefreshResults
+): () => void {
+  let running = false;
+  let stopped = false;
+  const run = async () => {
+    if (running || stopped) return;
+    running = true;
+    try {
+      await cleanup();
+    } catch {
+      console.error("Refresh replay cleanup failed");
+    } finally {
+      running = false;
+    }
+  };
+  void run();
+  const timer = setInterval(() => void run(), 60_000);
+  timer.unref();
+  return () => {
+    stopped = true;
+    clearInterval(timer);
+  };
+}
