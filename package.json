@@ -16,7 +16,8 @@
     "lint:web": "turbo lint --filter @veralog/web",
     "test": "turbo test",
     "test:watch": "turbo test:watch",
-    "prepare": "husky && node scripts/worktree-setup.mjs --install-hook"
+    "prepare": "husky && node scripts/worktree-setup.mjs --install-hook",
+    "verify": "node scripts/verify.mjs"
   },
   "keywords": [],
   "author": "",
