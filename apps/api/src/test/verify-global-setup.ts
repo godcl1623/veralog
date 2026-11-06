@@ -18,5 +18,7 @@ export default async function verifyGlobalSetup(): Promise<void> {
   } finally {
     await client.end();
   }
+  // Migration must use the same explicit port as the identity check.
+  process.env.DATABASE_URL_TEST = target;
   await globalSetup();
 }

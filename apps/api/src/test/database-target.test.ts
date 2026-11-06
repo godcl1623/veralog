@@ -1,6 +1,9 @@
-import { describe, expect, it } from "vitest";
+import postgres from "postgres";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { assertTestDatabaseUrl } from "./database-target";
+
+afterEach(() => vi.unstubAllEnvs());
 
 describe("verification database target", () => {
   it.each([
@@ -8,7 +11,7 @@ describe("verification database target", () => {
     "postgresql://synthetic:synthetic@127.0.0.1:5432/veralog_test",
     "postgres://synthetic:synthetic@[::1]:5432/veralog_test",
   ])("accepts only the approved local target", (value) => {
-    expect(assertTestDatabaseUrl(value)).toBe(value);
+    expect(new URL(assertTestDatabaseUrl(value)).port).toBe("5432");
   });
 
   it.each([
@@ -45,4 +48,19 @@ describe("verification database target", () => {
       )
     );
   });
+  it.each(["5433", "6543"])(
+    "fixes the actual driver port when PGPORT=%s and the URL omits a port",
+    async (port) => {
+      vi.stubEnv("PGPORT", port);
+      const target = assertTestDatabaseUrl(
+        "postgres://synthetic:synthetic@localhost/veralog_test"
+      );
+      const client = postgres(target, { max: 1 });
+      try {
+        expect(client.options.port).toEqual([5432]);
+      } finally {
+        await client.end();
+      }
+    }
+  );
 });

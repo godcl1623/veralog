@@ -16,7 +16,9 @@ Provide DATABASE_URL_TEST in the process environment before running. The runner
 does not load environment files or print credentials. It accepts only postgres
 or postgresql URLs targeting localhost, 127.0.0.1 or [::1], port 5432 (including
 the default port), database veralog_test, without URL query options/fragments.
-It removes DATABASE_URL from child environments. Missing/invalid input fails
+An omitted port is normalized to explicit 5432 before identity, migration and
+test connections, so inherited PGPORT cannot redirect them. It removes
+DATABASE_URL from child environments. Missing/invalid input fails
 before any verification step. It never creates a database or runs db:migrate.
 
 The user has confirmed veralog_test is dedicated to tests; veralog is the actual

@@ -75,4 +75,19 @@ describe("verification setup before migration", () => {
     expect(mocks.end).toHaveBeenCalledTimes(1);
     expect(mocks.migrate).not.toHaveBeenCalled();
   });
+  it("passes the explicit port to identity and migration connections", async () => {
+    vi.stubEnv("PGPORT", "6543");
+    vi.stubEnv(
+      "DATABASE_URL_TEST",
+      "postgres://synthetic:synthetic@localhost/veralog_test"
+    );
+    const normalized =
+      "postgres://synthetic:synthetic@localhost:5432/veralog_test";
+    mocks.migrate.mockImplementationOnce(async () => {
+      expect(process.env.DATABASE_URL_TEST).toBe(normalized);
+    });
+    await verifyGlobalSetup();
+    expect(mocks.connect).toHaveBeenCalledWith(normalized, { max: 1 });
+    expect(mocks.migrate).toHaveBeenCalledTimes(1);
+  });
 });

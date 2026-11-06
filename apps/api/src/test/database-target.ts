@@ -17,5 +17,6 @@ export function assertTestDatabaseUrl(value: string | undefined): string {
   ) {
     throw new Error(message);
   }
-  return value!;
+  target.port = "5432";
+  return target.href;
 }
