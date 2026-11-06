@@ -3,15 +3,15 @@
   "compilerOptions": {
     "module": "preserve",
     "moduleResolution": "bundler",
-    "rootDir": "../../",
-    "outDir": "../../dist/apps/api",
+    "rootDir": "src",
+    "outDir": "dist",
     "noEmit": false,
     "types": ["node"],
     "paths": {
       "@veralog/shared": ["../../packages/shared/src/index.ts"]
     }
   },
-  "include": ["./**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": [
     "**/*.test.ts",
     "**/*.spec.ts",

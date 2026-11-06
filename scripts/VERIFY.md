@@ -34,7 +34,11 @@ passWithNoTests behavior; a zero count is reported explicitly. Web has no
 functional test files or test:api script at this develop stage. It is type checked,
 linted and built; no empty web test run is presented as success. This baseline
 contains actual API safety and DB sanity tests and must not pass an empty API
-suite. Root runner tests exercise real child-process failures and success.
+suite. Root runner tests exercise real child-process failures and success. A fresh-build
+regression compiles the actual API into an empty test output directory and checks
+that both existing start commands reference emitted files. That output is removed
+after the test; stale build artifacts cannot satisfy the check. Source/test/config
+type coverage stays in the separate noEmit type step.
 
 Authentication, OpenAPI and Orval are not yet present on this baseline. Their
 feature PRs must add their tests and drift checks as fixed required verify steps
