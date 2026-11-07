@@ -22,8 +22,8 @@ with RESTART IDENTITY CASCADE before each API test. CASCADE can affect additiona
 referencing tables. Test data is not preserved; fixtures recreate it. The runner
 never creates a database or invokes db:migrate.
 
-The fixed sequence is package lint, API source/test types, web/shared types,
-root script tests, every current API source test, shared tests, shared/API builds
+The fixed sequence is package lint, shared build, API source/test types, web/shared types,
+root script tests, every current API source test, shared tests, API build
 and the web production build. Vite tests/builds use envDir:false. The ordinary
 product build keeps its existing environment behavior. The runner never installs
 dependencies, fixes sources or accepts skip flags. A failed command prevents
@@ -40,7 +40,10 @@ that both existing start commands reference emitted files. That output is remove
 after the test; stale build artifacts cannot satisfy the check. Source/test/config
 type coverage stays in the separate noEmit type step.
 
-Authentication, OpenAPI and Orval are not yet present on this baseline. Their
+Authentication tests run with synthetic credentials and a mocked application DB
+client pointing only to the guarded test DB. Shared exports compiled JavaScript
+and declarations; build it before checking or building its API consumer.
+OpenAPI and Orval are not yet present on this baseline. Their
 feature PRs must add their tests and drift checks as fixed required verify steps
 in the same change. The runner does not detect missing scripts and silently skip
 them. Worktree initialization tests run through root script discovery. They exercise
