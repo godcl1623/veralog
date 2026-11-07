@@ -15,7 +15,7 @@
     "build:web": "turbo build --filter @veralog/web",
     "lint:web": "turbo lint --filter @veralog/web",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky",
+    "prepare": "husky && node scripts/worktree-setup.mjs --install-hook",
     "verify": "node scripts/verify.mjs"
   },
   "keywords": [],

@@ -43,10 +43,12 @@ type coverage stays in the separate noEmit type step.
 Authentication, OpenAPI and Orval are not yet present on this baseline. Their
 feature PRs must add their tests and drift checks as fixed required verify steps
 in the same change. The runner does not detect missing scripts and silently skip
-them. Worktree script tests will join the existing root test discovery when that
-feature is added. Preserve the full checks when reassembling the original branch.
+them. Worktree initialization tests run through root script discovery. They exercise
+actual Git worktree creation, copy/link configuration, preserved files/hooks and
+unsafe-path rejection using isolated fixtures that are removed after each test. Preserve the full checks when reassembling the original branch.
 
 Tests and builds do not prove browser cookies, real OAuth, multiple API processes,
 production DB behavior or deployment. Record the actual tested HEAD, exit code
-and counts in the ticket handoff. Build outputs use normal ignored paths; no
-extra temporary repository or recovery script is created.
+and counts in the ticket handoff. Build outputs use normal ignored paths. Worktree tests use their existing OS-temp
+Git fixtures with automatic cleanup; no additional recovery repository or helper
+script is created outside those tests.
