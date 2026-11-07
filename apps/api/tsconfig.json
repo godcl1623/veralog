@@ -6,7 +6,17 @@
     "rootDir": "src",
     "outDir": "dist",
     "noEmit": false,
-    "types": ["node", "vitest/globals"]
+    "types": ["node"],
+    "paths": {
+      "@veralog/shared": ["../../packages/shared/src/index.ts"]
+    }
   },
-  "include": ["./**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "src/test/**",
+    "vitest.config.ts",
+    "vitest.global-setup.ts"
+  ]
 }

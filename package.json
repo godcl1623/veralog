@@ -15,13 +15,14 @@
     "build:web": "turbo build --filter @veralog/web",
     "lint:web": "turbo lint --filter @veralog/web",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
+    "prepare": "husky",
+    "verify": "node scripts/verify.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
-  "packageManager": "pnpm@11.7.0",
+  "packageManager": "pnpm@11.8.0",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.1",
