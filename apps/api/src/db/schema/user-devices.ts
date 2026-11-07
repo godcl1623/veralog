@@ -9,6 +9,11 @@ export const userDevices = pgTable("user_devices", {
     .references(() => users.id, { onDelete: "cascade" }),
   deviceName: varchar("device_name"),
   refreshToken: varchar("refresh_token"),
+  refreshExpiresAt: timestamp("refresh_expires_at", { withTimezone: true }),
+  previousRefreshTokenHash: varchar("previous_refresh_token_hash"),
   lastAccessedAt: timestamp("last_accessed_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export type NewUserDevice = typeof userDevices.$inferInsert;
+export type UserDevice = typeof userDevices.$inferSelect;

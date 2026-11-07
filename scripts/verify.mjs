@@ -49,6 +49,7 @@ function verificationSteps() {
       "apps/api",
       "packages/shared",
     ]),
+    shared("shared build", "build"),
     api(
       "API source/test types",
       "exec",
@@ -73,7 +74,6 @@ function verificationSteps() {
       "vitest.verify.config.ts"
     ),
     shared("shared tests (currently no test files)", "test"),
-    shared("shared build", "build"),
     api("API build", "build"),
     {
       label: "web production build without environment files",
