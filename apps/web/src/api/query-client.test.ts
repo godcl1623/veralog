@@ -67,6 +67,10 @@ describe("API query client", () => {
     const failure = new Error("policy fixture failure");
     const queryFn = vi.fn().mockRejectedValue(failure);
     try {
+      // fetchQuery supplies its own no-retry fallback, so check the shared policy too.
+      expect(
+        client.defaultQueryOptions({ queryKey: ["failed-fixture"] }).retry,
+      ).toBe(false);
       await expect(
         client.fetchQuery({ queryKey: ["failed-fixture"], queryFn }),
       ).rejects.toBe(failure);
