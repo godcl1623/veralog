@@ -11,7 +11,8 @@ On `git worktree add`, the hook reads `scripts/worktree-files.json` from the mai
 checkout. `copy` entries become independent files; `symlink` entries point to the
 main checkout, so edits through those links affect the main checkout too. The
 default copies `AGENTS.md` and `.codex/docs`. Only those paths and descendants of
-`.codex/docs` are allowed. Source links are not followed. Environment files,
+`.codex/docs` are allowed. Source links, including links in parent directories, are rejected before copying
+or creating a link. Environment files,
 dependencies and other agent state are excluded. Dependencies need their own
 installation and approval; this hook never installs them.
 

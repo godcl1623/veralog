@@ -93,7 +93,18 @@ if (args[0] === "--install-hook") {
       validate(path);
       const from = resolve(source, path);
       const to = resolve(target, path);
-      if (present(to) || !present(from)) continue;
+      if (present(to)) continue;
+      // Parent links can redirect even a regular source file outside the allowlist.
+      for (
+        let parent = dirname(from);
+        parent !== source;
+        parent = dirname(parent)
+      ) {
+        if (present(parent) && lstatSync(parent).isSymbolicLink()) {
+          throw new Error(`Source parent is a link: ${parent}`);
+        }
+      }
+      if (!present(from)) continue;
       // Refuse an existing linked parent that could redirect writes elsewhere.
       for (
         let parent = dirname(to);

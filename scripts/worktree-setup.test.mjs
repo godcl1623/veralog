@@ -182,3 +182,33 @@ test("unsafe paths and redirected destinations fail instead of copying", (t) => 
   );
   assert.match(f.run("--copy").stderr, /Source link cannot be copied/);
 });
+
+test("source parent symlinks cannot expose files outside the main checkout", (t) => {
+  const f = fixture(t);
+  f.git(f.main, "worktree", "add", "--no-checkout", "-qb", "ticket", f.wt);
+  const external = join(dirname(f.wt), "external-docs");
+  f.put(join(external, "guide.md"), "synthetic external content\n");
+  rmSync(join(f.main, ".codex/docs"), { recursive: true });
+  symlinkSync(external, join(f.main, ".codex/docs"), "dir");
+  const check = (path) => {
+    for (const mode of ["copy", "symlink"]) {
+      f.put(
+        join(f.main, "scripts/worktree-files.json"),
+        JSON.stringify({
+          copy: mode === "copy" ? [path] : [],
+          symlink: mode === "symlink" ? [path] : [],
+        })
+      );
+      const result = f.run("000000", "synthetic", "1");
+      assert.notEqual(result.status, 0, `${mode}: ${path}`);
+      assert.match(result.stderr, /Source parent is a link/);
+      assert.equal(existsSync(join(f.wt, ".codex")), false);
+    }
+  };
+  check(".codex/docs/guide.md");
+  rmSync(join(f.main, ".codex/docs"));
+  rmSync(join(f.main, ".codex"), { recursive: true });
+  f.put(join(external, "docs/guide.md"), "synthetic external content\n");
+  symlinkSync(external, join(f.main, ".codex"), "dir");
+  check(".codex/docs");
+});
