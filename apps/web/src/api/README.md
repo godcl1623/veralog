@@ -57,6 +57,30 @@ temporary repository copies to prove stale detection and preservation on parse
 failure. No real API/DB/OAuth requests are made.
 
 Automatic refresh, concurrent refresh coordination, logout races, multiple tabs,
-QueryClient/provider defaults and the representative MSW/consumer flow still
-need the remaining VERALOG-12/13 decisions and checks. Do not treat these
-generated hooks as a completed login flow.
+and the representative MSW/consumer flow remain in VERALOG-16 and VERALOG-13,
+respectively. Do not treat these generated hooks as a completed login flow.
+
+## Query client and explicit refresh
+
+`createApiQueryClient()` applies the existing manual-refresh contract: cached
+queries stay fresh and remain in memory for the lifetime of this client, with no
+refetch on remount, focus, reconnect or interval. Query and mutation retries are
+disabled. A missing query can fetch initially; explicit `refetch` can refresh it.
+No actual domain GET or cursor query is generated yet.
+
+Use one stable client per authenticated app lifetime. Inactive data is retained
+(`gcTime: Infinity`), so session/account boundaries must clear or discard that
+client when the authentication consumer is implemented. This factory does not
+persist cache to storage or handle session lifecycle itself.
+
+Mutations do not globally invalidate active queries. Use confirmed response data
+to update relevant caches when a real endpoint is implemented, or explicitly
+refresh at the user's request. TanStack's `invalidateQueries` defaults to
+refetching active queries: use `refetchType: "none"` when only marking stale.
+Do not override these defaults to add background refetch without revisiting the
+product contract.
+
+The provider test uses React server rendering to check generated mutation hook
+context and idle state without a DOM. Observer tests exercise cache lifecycle,
+focus/reconnect and explicit refetch separately. This is not a mounted browser
+consumer or MSW mutation-flow check; those remain in VERALOG-13.
