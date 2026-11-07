@@ -59,6 +59,8 @@ function verificationSteps() {
       "tsconfig.auth-tests.json"
     ),
     web("web types", "exec", "tsc", "-b"),
+    api("OpenAPI tests", "test:openapi"),
+    api("OpenAPI drift", "openapi:check"),
     shared("shared types", "exec", "tsc", "--noEmit"),
     {
       label: "root script tests",

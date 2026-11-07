@@ -251,7 +251,6 @@ snapshots:
   pnpm@11.6.0: {}
 
   packages/shared: {}
-
 ---
 lockfileVersion: "9.0"
 
@@ -328,6 +327,12 @@ importers:
       postgres:
         specifier: ^3.4.9
         version: 3.4.9
+      "@hono/zod-openapi":
+        specifier: 1.6.3
+        version: 1.6.3(hono@4.12.25)(zod@4.6.7)
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       "@types/node":
         specifier: ^25.9.3
@@ -366,8 +371,8 @@ importers:
         specifier: ^7.78.0
         version: 7.78.0(react@19.2.7)
       zod:
-        specifier: ^4.4.3
-        version: 4.4.3
+        specifier: 4.6.7
+        version: 4.6.7
       zustand:
         specifier: ^5.0.14
         version: 5.0.14(@types/react@19.2.17)(react@19.2.7)
@@ -412,8 +417,8 @@ importers:
   packages/shared:
     dependencies:
       zod:
-        specifier: ^4.4.3
-        version: 4.4.3
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       "@types/node":
         specifier: ^25.9.3
@@ -421,6 +426,7 @@ importers:
       vitest:
         specifier: ^4.1.8
         version: 4.1.8(@types/node@25.9.3)(msw@2.14.6(@types/node@25.9.3)(typescript@6.0.3))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+  packages/api-contract: {}
 
 packages:
   "@adobe/css-tools@4.5.0":
@@ -1496,21 +1502,24 @@ packages:
       {
         integrity: sha512-zw/wn0sj0j0QKbIXfIlnEcTviaCzYOY3V5rAyjR6YtOByFtJiT574+8p9Wlach0lZH9fddD4yb9laEAIl4vXQA==,
       }
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+    deprecated: Package no longer supported. Contact Support at
+      https://www.npmjs.com/support for more info.
 
   "@oslojs/binary@1.0.0":
     resolution:
       {
         integrity: sha512-9RCU6OwXU6p67H4NODbuxv2S3eenuQ4/WFLrsq+K/k682xrznH5EVWA7N4VFk9VYVcbFtKqur5YQQZc0ySGhsQ==,
       }
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+    deprecated: Package no longer supported. Contact Support at
+      https://www.npmjs.com/support for more info.
 
   "@oslojs/crypto@1.0.1":
     resolution:
       {
         integrity: sha512-7n08G8nWjAr/Yu3vu9zzrd0L9XnrJfpMioQcvCMxBIiF5orECHe5/3J0jmXRVvgfqMm/+4oxlQ+Sq39COYLcNQ==,
       }
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+    deprecated: Package no longer supported. Contact Support at
+      https://www.npmjs.com/support for more info.
 
   "@oslojs/encoding@0.4.1":
     resolution:
@@ -1529,7 +1538,8 @@ packages:
       {
         integrity: sha512-bLE7BtHrURedCn4Mco3ma9L4Y1GR2SMBuIvjWr7rmQ4/W/4Jy70TIAgZ+0nIlk0xHz1vNP8x8DCns45Sb2XRbg==,
       }
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+    deprecated: Package no longer supported. Contact Support at
+      https://www.npmjs.com/support for more info.
 
   "@oxc-project/types@0.133.0":
     resolution:
@@ -2246,7 +2256,8 @@ packages:
       {
         integrity: sha512-ZMQ+f6VazDgUJOd+qNV+H7GohNSYal1mVjm5kEaZfE2Ifb7Ss70w+Q7xpJC87qZDkMZIXYf0pTIYZA0OPasSbw==,
       }
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+    deprecated: Package no longer supported. Contact Support at
+      https://www.npmjs.com/support for more info.
 
   aria-query@5.3.0:
     resolution:
@@ -2719,7 +2730,9 @@ packages:
       }
     engines: { node: ">=18" }
     peerDependencies:
-      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0 || ^10.0.0
+      eslint:
+        ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0 ||
+        ^10.0.0
 
   eslint-plugin-react-refresh@0.5.2:
     resolution:
@@ -4276,6 +4289,47 @@ packages:
         optional: true
       use-sync-external-store:
         optional: true
+  "@asteasolutions/zod-to-openapi@9.1.0":
+    resolution:
+      {
+        integrity: sha512-pLMeRgRYS7/vZIgAAkOe2P6+XGTifR1MT9pqDoxZ11EmcJJ+DPmdPqLN8ZZF4U8R9KHCCQCS9c2wtuE8wSrfkw==,
+      }
+    peerDependencies:
+      zod: ^4.0.0
+  "@hono/zod-openapi@1.6.3":
+    resolution:
+      {
+        integrity: sha512-VYR82Y60plu8g3pN60OUXMVKpmxh3R04Qs++3DY9vtwZ9/sA/BRY0PcRIR+Z37/3itWtM7pYwT9bKiH9JhqV6Q==,
+      }
+    engines: { node: ">=16.0.0" }
+    peerDependencies:
+      hono: ">=4.10.0"
+      zod: ^4.0.0
+  "@hono/zod-validator@0.9.1":
+    resolution:
+      {
+        integrity: sha512-iiv6w0qrIc0arfvCtUqBWsvl4fXjzaTcQcCJTTtCnkawF9HHGE+KjEl0ox3gQJ6rKZEgE3mLExlQCF72M+mNuw==,
+      }
+    peerDependencies:
+      hono: ">=4.11.2"
+      zod: ^3.25.0 || ^4.0.0
+  openapi3-ts@4.6.2:
+    resolution:
+      {
+        integrity: sha512-gyyil3DweqhXiEhTqtAs9wwRLfWHmetwhI4kmM5Rn0d6gtmK863Ki7qqbQnp9+Wwlqoe3B1LFWj7kMp5ctE4rQ==,
+      }
+  yaml@2.9.1:
+    resolution:
+      {
+        integrity: sha512-3NxN8+78OdzbT7C/WjGsyfPAtJaN3FNDsWxv7Y7mcDsT/oOmgW8BpyQQFFBnvZE3j9Y2Sdz1ULFLezL7Eb2yFw==,
+      }
+    engines: { node: ">= 14.6" }
+    hasBin: true
+  zod@4.6.7:
+    resolution:
+      {
+        integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==,
+      }
 
 snapshots:
   "@adobe/css-tools@4.5.0": {}
@@ -6339,3 +6393,23 @@ snapshots:
     optionalDependencies:
       "@types/react": 19.2.17
       react: 19.2.7
+  "@asteasolutions/zod-to-openapi@9.1.0(zod@4.6.7)":
+    dependencies:
+      openapi3-ts: 4.6.2
+      zod: 4.6.7
+  "@hono/zod-openapi@1.6.3(hono@4.12.25)(zod@4.6.7)":
+    dependencies:
+      "@asteasolutions/zod-to-openapi": 9.1.0(zod@4.6.7)
+      "@hono/zod-validator": 0.9.1(hono@4.12.25)(zod@4.6.7)
+      hono: 4.12.25
+      openapi3-ts: 4.6.2
+      zod: 4.6.7
+  "@hono/zod-validator@0.9.1(hono@4.12.25)(zod@4.6.7)":
+    dependencies:
+      hono: 4.12.25
+      zod: 4.6.7
+  openapi3-ts@4.6.2:
+    dependencies:
+      yaml: 2.9.1
+  yaml@2.9.1: {}
+  zod@4.6.7: {}
