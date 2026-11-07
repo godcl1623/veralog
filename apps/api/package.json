@@ -12,7 +12,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "openapi:generate": "node scripts/openapi/export-openapi.mjs",
+    "openapi:check": "node scripts/openapi/export-openapi.mjs --check",
+    "test:openapi": "node --test scripts/openapi/openapi.test.mjs"
   },
   "author": "godcl1623",
   "type": "module",
