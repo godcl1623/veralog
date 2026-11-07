@@ -32,6 +32,8 @@ import {
   hashToken,
   REFRESH_TOKEN_TTL_SECONDS,
 } from "../../../utils/token.js";
+import { logoutRouter } from "./logout.js";
+import { refreshRouter } from "./refresh.js";
 
 export const auth = new Hono();
 
@@ -53,6 +55,9 @@ const google = new Google(
 
 const SCOPES = ["openid", "profile", "email"];
 const OAUTH_COOKIE_MAX_AGE = 600; // 10 minutes
+
+auth.route("/", refreshRouter);
+auth.route("/", logoutRouter);
 
 auth.get("/google", async (ctx) => {
   try {
