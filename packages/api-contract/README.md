@@ -8,9 +8,9 @@ The source is `apps/api/src/routes/v1/auth/contract.ts`. The API registers these
 same definitions with its existing handlers. Its offline exporter imports only
 the pure contracts, without the application router, database, OAuth environment
 or server entrypoint. This private workspace package has no runtime dependencies
-or build step. `apps/web` will consume this document through Orval in VERALOG-12;
-it does not import the API server. Orval and Turbo task/cache wiring are not yet
-implemented.
+or build step. `apps/web` consumes this document through Orval; it does not import the API
+server. See [the web client guide](../../apps/web/src/api/README.md) for generation,
+drift checks and transport limitations. Turbo task/cache wiring is not implemented.
 
 ## Update and verify
 

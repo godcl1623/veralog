@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "api:generate": "node scripts/api-client.mjs",
+    "api:check": "node scripts/api-client.mjs --check",
+    "test:api": "vitest run --config vitest.api.config.ts",
+    "test:api-generation": "node --test scripts/api-client.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
