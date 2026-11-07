@@ -297,38 +297,41 @@ describe("GET /google/callback", () => {
     expect(res.headers.getSetCookie()).toHaveLength(0);
   });
 
-  it("9. 168h 경계(1ms 초과) → hard delete 분기", async () => {
-    const deletedAt = new Date(Date.now() - 168 * 3600 * 1000 - 1);
-    const oldUser = await createUser({ deletedAt });
-    await createOAuthAccount(oldUser.id, {
-      provider: "google",
-      providerAccountId: GOOGLE_SUB,
-    });
+  it.each([604799999, 604800000, 604800001])(
+    "삭제 사용자 복구 경계: 경과 %s ms",
+    async (elapsed) => {
+      const time = 1800000000000;
+      const oldUser = await createUser({ deletedAt: new Date(time - elapsed) });
+      await createOAuthAccount(oldUser.id, {
+        provider: "google",
+        providerAccountId: GOOGLE_SUB,
+      });
+      mock = mockGoogle({
+        tokenResponse: { access_token: "google-access", token_type: "Bearer" },
+        userinfoResponse: { sub: GOOGLE_SUB },
+      });
+      vi.spyOn(Date, "now").mockReturnValue(time);
+      const req = makeCallbackRequest();
+      const res = await auth.request(req.path, { headers: req.headers });
 
-    mock = mockGoogle({
-      tokenResponse: { access_token: "google-access", token_type: "Bearer" },
-      userinfoResponse: { sub: GOOGLE_SUB },
-    });
-
-    const req = makeCallbackRequest();
-    const res = await auth.request(req.path, { headers: req.headers });
-
-    expect(res.status).toBe(302);
-    expect(res.headers.get("Location")).toBe(
-      `${FRONTEND_BASE_URL}/terms?new=true`
-    );
-
-    // 기존 user hard delete 확인
-    const oldCheck = await db
-      .select()
-      .from(users)
-      .where(eq(users.id, oldUser.id));
-    expect(oldCheck).toHaveLength(0);
-
-    // 새 user 1행
-    const allUsers = await db.select().from(users);
-    expect(allUsers).toHaveLength(1);
-  });
+      expect(res.status).toBe(302);
+      const restored = elapsed <= 604800000;
+      expect(res.headers.get("Location")).toBe(
+        restored ? FRONTEND_BASE_URL : `${FRONTEND_BASE_URL}/terms?new=true`
+      );
+      const allUsers = await db.select().from(users);
+      expect(allUsers).toHaveLength(1);
+      if (restored) {
+        expect(allUsers[0].id).toBe(oldUser.id);
+        expect(allUsers[0].deletedAt).toBeNull();
+      } else {
+        expect(allUsers[0].id).not.toBe(oldUser.id);
+        expect(
+          await db.select().from(users).where(eq(users.id, oldUser.id))
+        ).toHaveLength(0);
+      }
+    }
+  );
 
   it.each([
     ["?code=x", {}, "state_missing"],
