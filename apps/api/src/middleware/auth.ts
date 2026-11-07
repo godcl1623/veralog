@@ -1,7 +1,7 @@
 import type { MiddlewareHandler } from "hono";
 import { getCookie } from "hono/cookie";
 
-import { ACCESS_TOKEN_COOKIE_NAME, verifyAccessToken } from "../utils/jwt";
+import { ACCESS_TOKEN_COOKIE_NAME, verifyAccessToken } from "../utils/jwt.js";
 
 // Hono 컨텍스트 변수 타입 확장 — hono/jwt와 동일한 패턴.
 // 미들웨어 통과 후 c.get("user")로 { id }을 얻을 수 있다.

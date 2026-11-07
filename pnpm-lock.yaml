@@ -316,6 +316,9 @@ importers:
       "@veralog/shared":
         specifier: workspace:*
         version: link:../../packages/shared
+      arctic:
+        specifier: ^3.7.0
+        version: 3.7.0
       drizzle-orm:
         specifier: ^0.45.2
         version: 0.45.2(postgres@3.4.9)
@@ -577,14 +580,14 @@ packages:
       {
         integrity: sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ==,
       }
-    deprecated: "Merged into tsx: https://tsx.is"
+    deprecated: "Merged into tsx: https://tsx.hirok.io"
 
   "@esbuild-kit/esm-loader@2.6.5":
     resolution:
       {
         integrity: sha512-FxEMIkJKnodyA1OaCUoEvbYRkoZlLZ4d/eXFu9Fh8CbBBgP5EmZxrfTRyN0qpXZ4vOvqnE5YdRdcrmUUXuU+dA==,
       }
-    deprecated: "Merged into tsx: https://tsx.is"
+    deprecated: "Merged into tsx: https://tsx.hirok.io"
 
   "@esbuild/aix-ppc64@0.25.12":
     resolution:
@@ -1488,6 +1491,46 @@ packages:
         integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==,
       }
 
+  "@oslojs/asn1@1.0.0":
+    resolution:
+      {
+        integrity: sha512-zw/wn0sj0j0QKbIXfIlnEcTviaCzYOY3V5rAyjR6YtOByFtJiT574+8p9Wlach0lZH9fddD4yb9laEAIl4vXQA==,
+      }
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+
+  "@oslojs/binary@1.0.0":
+    resolution:
+      {
+        integrity: sha512-9RCU6OwXU6p67H4NODbuxv2S3eenuQ4/WFLrsq+K/k682xrznH5EVWA7N4VFk9VYVcbFtKqur5YQQZc0ySGhsQ==,
+      }
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+
+  "@oslojs/crypto@1.0.1":
+    resolution:
+      {
+        integrity: sha512-7n08G8nWjAr/Yu3vu9zzrd0L9XnrJfpMioQcvCMxBIiF5orECHe5/3J0jmXRVvgfqMm/+4oxlQ+Sq39COYLcNQ==,
+      }
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+
+  "@oslojs/encoding@0.4.1":
+    resolution:
+      {
+        integrity: sha512-hkjo6MuIK/kQR5CrGNdAPZhS01ZCXuWDRJ187zh6qqF2+yMHZpD9fAYpX8q2bOO6Ryhl3XpCT6kUX76N8hhm4Q==,
+      }
+
+  "@oslojs/encoding@1.1.0":
+    resolution:
+      {
+        integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==,
+      }
+
+  "@oslojs/jwt@0.2.0":
+    resolution:
+      {
+        integrity: sha512-bLE7BtHrURedCn4Mco3ma9L4Y1GR2SMBuIvjWr7rmQ4/W/4Jy70TIAgZ+0nIlk0xHz1vNP8x8DCns45Sb2XRbg==,
+      }
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+
   "@oxc-project/types@0.133.0":
     resolution:
       {
@@ -2197,6 +2240,13 @@ packages:
         integrity: sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==,
       }
     engines: { node: ">=12" }
+
+  arctic@3.7.0:
+    resolution:
+      {
+        integrity: sha512-ZMQ+f6VazDgUJOd+qNV+H7GohNSYal1mVjm5kEaZfE2Ifb7Ss70w+Q7xpJC87qZDkMZIXYf0pTIYZA0OPasSbw==,
+      }
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   aria-query@5.3.0:
     resolution:
@@ -4740,6 +4790,25 @@ snapshots:
 
   "@open-draft/until@2.1.0": {}
 
+  "@oslojs/asn1@1.0.0":
+    dependencies:
+      "@oslojs/binary": 1.0.0
+
+  "@oslojs/binary@1.0.0": {}
+
+  "@oslojs/crypto@1.0.1":
+    dependencies:
+      "@oslojs/asn1": 1.0.0
+      "@oslojs/binary": 1.0.0
+
+  "@oslojs/encoding@0.4.1": {}
+
+  "@oslojs/encoding@1.1.0": {}
+
+  "@oslojs/jwt@0.2.0":
+    dependencies:
+      "@oslojs/encoding": 0.4.1
+
   "@oxc-project/types@0.133.0": {}
 
   "@pkgr/core@0.3.6": {}
@@ -5145,6 +5214,12 @@ snapshots:
   ansi-styles@5.2.0: {}
 
   ansi-styles@6.2.3: {}
+
+  arctic@3.7.0:
+    dependencies:
+      "@oslojs/crypto": 1.0.1
+      "@oslojs/encoding": 1.1.0
+      "@oslojs/jwt": 0.2.0
 
   aria-query@5.3.0:
     dependencies:

@@ -4,7 +4,7 @@ import { getRequiredEnv } from "@veralog/shared";
 import type { Context } from "hono";
 import { getCookie } from "hono/cookie";
 
-import { hashToken } from "./token";
+import { hashToken } from "./token.js";
 
 export const CSRF_COOKIE_NAME = "csrf_token";
 export const CSRF_HEADER_NAME = "X-CSRF-Token";

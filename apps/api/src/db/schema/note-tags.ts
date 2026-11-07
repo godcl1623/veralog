@@ -1,7 +1,7 @@
 import { index, pgTable, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 
-import { notes } from "./notes";
-import { tags } from "./tags";
+import { notes } from "./notes.js";
+import { tags } from "./tags.js";
 
 export const noteTags = pgTable(
   "note_tags",

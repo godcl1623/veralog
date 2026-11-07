@@ -8,9 +8,9 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { categories } from "./categories";
-import { projects } from "./projects";
-import { users } from "./users";
+import { categories } from "./categories.js";
+import { projects } from "./projects.js";
+import { users } from "./users.js";
 
 export const notes = pgTable(
   "notes",

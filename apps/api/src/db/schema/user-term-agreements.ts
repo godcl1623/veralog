@@ -1,7 +1,7 @@
 import { pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
 
-import { terms } from "./terms";
-import { users } from "./users";
+import { terms } from "./terms.js";
+import { users } from "./users.js";
 
 export const userTermAgreements = pgTable("user_term_agreements", {
   id: uuid("id").primaryKey().defaultRandom(),

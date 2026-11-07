@@ -1,13 +1,13 @@
 import type { Context } from "hono";
 import { setCookie } from "hono/cookie";
 
-import { createCsrfToken, CSRF_COOKIE_NAME } from "./csrf";
+import { createCsrfToken, CSRF_COOKIE_NAME } from "./csrf.js";
 import {
   ACCESS_TOKEN_COOKIE_NAME,
   ACCESS_TOKEN_TTL_SECONDS,
   REFRESH_TOKEN_COOKIE_NAME,
-} from "./jwt";
-import { REFRESH_TOKEN_TTL_SECONDS } from "./token";
+} from "./jwt.js";
+import { REFRESH_TOKEN_TTL_SECONDS } from "./token.js";
 
 const baseOpts = {
   path: "/",
