@@ -61,6 +61,9 @@ function verificationSteps() {
     web("web types", "exec", "tsc", "-b"),
     api("OpenAPI tests", "test:openapi"),
     api("OpenAPI drift", "openapi:check"),
+    web("Orval generation regression", "test:api-generation"),
+    web("Orval drift", "api:check"),
+    web("web API tests", "test:api"),
     shared("shared types", "exec", "tsc", "--noEmit"),
     {
       label: "root script tests",

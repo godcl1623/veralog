@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "api:generate": "node scripts/api-client.mjs",
+    "api:check": "node scripts/api-client.mjs --check",
+    "test:api": "vitest run --config vitest.api.config.ts",
+    "test:api-generation": "node --test scripts/api-client.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
@@ -30,6 +34,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "msw": "^2.14.6",
+    "orval": "^8.45.0",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4.3.0",
     "vite": "^8.0.12",
